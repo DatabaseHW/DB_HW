@@ -11,10 +11,10 @@ def home():
 @website.route("/login", methods = ['GET','POST'])
 def login():
     if request.method == 'POST':
-        session['Account'] = request.form['Account']
+        session['user'] = request.form['user']
         return redirect(url_for('home'))
     else:
-        return render_template("index.html")
+        return render_template("index.html",)
 
 if __name__ == '__main__':
     website.run()

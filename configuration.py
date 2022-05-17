@@ -21,9 +21,3 @@ user_migrate = Migrate(website, user_database)
 Login_manager = LoginManager()
 Login_manager.init_app(website)
 Login_manager.login_view = 'Login_view'
-
-"""
-1034:22
-3050:5000
-tonych.me
-"""

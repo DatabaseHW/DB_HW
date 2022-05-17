@@ -20,4 +20,4 @@ user_migrate = Migrate(website, user_database)
 
 Login_manager = LoginManager()
 Login_manager.init_app(website)
-Login_manager.login_view = 'Login_view'
+Login_manager.login_view = 'direct_login'

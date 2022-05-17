@@ -14,7 +14,7 @@ def Register():
             flash("帳號已被註冊")
             return render_template('sign-up.html', form = Sign_form)
         else:
-            new_user = User(1,Sign_form.account.data,Sign_form.password.data,Sign_form.name.data,Sign_form.phonenumber.data,Sign_form.latitude.data,Sign_form.longitude.data)
+            new_user = User(Sign_form.account.data,Sign_form.password.data,Sign_form.name.data,Sign_form.phonenumber.data,Sign_form.latitude.data,Sign_form.longitude.data)
             user_database.session.add(new_user)
             user_database.session.commit()
             return redirect(url_for('direct_login'))

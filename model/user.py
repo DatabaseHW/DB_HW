@@ -12,7 +12,7 @@ bcrypt = Bcrypt(website)
 
 class User(user_database.Model, UserMixin):
     __tablename__ = 'users'
-    id = user_database.Column(user_database.Integer, primary_key = True)
+    id = user_database.Column(user_database.String(256), primary_key = True)
     account = user_database.Column(user_database.String(64), unique = True)
     passwd_hash = user_database.Column(user_database.String(256))
     name = user_database.Column(user_database.String(64))
@@ -20,8 +20,8 @@ class User(user_database.Model, UserMixin):
     latitude = user_database.Column(user_database.Float)
     longitude = user_database.Column(user_database.Float)
 
-    def __init__(self, id, account, passwd, name, phone = None, latitude = None, longitude = None):
-        self.id = id
+    def __init__(self, account, passwd, name, phone = None, latitude = None, longitude = None):
+        self.id = bcrypt.generate_password_hash(account)
         self.name = name
         self.account = account
         self.passwd_hash = bcrypt.generate_password_hash(passwd)

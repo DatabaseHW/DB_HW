@@ -73,13 +73,24 @@
                                     <div class="alert alert-warning" role="alert">
                                         {{ message }}
                                     </div>
-                                    <script>
-                                        window.alert( "帳號 or 密碼錯誤" )
-                                    </script>
                                     {% endfor %}
                                 </div>
                             {% endif %}
                         {% endwith %}
+                        
+                        {% with messages = get_flashed_messages(category_filter=["wrong_passwd_or_account"]) %}
+                            {% if messages %}
+                                <div class="model-body">
+                                    {% for message in messages %}
+                                        <script>
+                                            window.alert( "帳號 or 密碼錯誤" )
+                                        </script>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endwith %}
+
+                        
 
 						<div class="form-group">
 							<label for="Account" class="sr-only">Account</label>

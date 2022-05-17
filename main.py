@@ -1,20 +1,17 @@
 from flask import *
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
 import os
 
-website = Flask(__name__)
-website.secret_key = os.urandom(16).hex()
 
-@website.route('/')
-def home():
-    return render_template("nav.html")
 
-@website.route("/login", methods = ['GET','POST'])
-def login():
-    if request.method == 'POST':
-        session['user'] = request.form['user']
-        return redirect(url_for('home'))
-    else:
-        return render_template("index.html",)
+import page.login
+import page.home
+import page.register
+from configuration import website, user_database
 
 if __name__ == '__main__':
+    user_database.drop_all()    # 希望程式重啟資料庫不會被刪除，就把這行註解
+    user_database.create_all()
     website.run()

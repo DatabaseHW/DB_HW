@@ -11,7 +11,7 @@ website = Flask(__name__)
 
 website.secret_key = os.urandom(16).hex()
 basedir = os.path.abspath(__file__)
-website.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost:3306/db"
+website.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:@localhost:3306/dbproject"
 
 
 # Login page configuration

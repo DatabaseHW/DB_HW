@@ -235,47 +235,57 @@
       </div>
       
       <div id="menu1" class="tab-pane fade">
-
-        {% if has_shop is none%}
-            <h3> Start a business </h3>
-            {% if name_repeated %}
-                <div class="model-body">
-                    <div class="alert alert-warning" role="alert">商店名字不可重複</div>
-                </div>
-                <div class="alert alert-warning" role="alert">
-                    商店名字不可重複
-                </div>
-            {% endif %}
-            <form method="post" class="fh5co-form animate-box" data-animate-effect="fadeIn">
-                <div class="form-group ">
-                <div class="row">
-                    <div class="col-xs-2">
-                    <label for="ex5">shop name</label>
-                    <input class="form-control" id="ex5" placeholder="macdonald" type="text" name="name">
-                    </div>
-                    <div class="col-xs-2">
-                    <label for="ex5">shop category</label>
-                    <input class="form-control" id="ex5" placeholder="fast food" type="text" name="categorys">
-                    </div>
-                    <div class="col-xs-2">
-                    <label for="ex6">latitude</label>
-                    <input class="form-control" id="ex6" placeholder="121.00028167648875" type="text" name="latitude">
-                    </div>
-                    <div class="col-xs-2">
-                    <label for="ex8">longitude</label>
-                    <input class="form-control" id="ex8" placeholder="24.78472733371133" type="text" name="longitude">
-                    </div>
-                </div>
-                </div>
-            
-                <div class=" row" style=" margin-top: 25px;">
-                <div class=" col-xs-3">
-                    <input type="submit" value="Register" class="btn btn-primary" name="Register_submit">
-                </div>
-                </div>
-            </form>
-            <hr>
+        <h3> Start a business </h3>
+        {% if name_repeated %}
+            <div class="model-body">
+                <div class="alert alert-warning" role="alert">商店名字不可重複</div>
+            </div>
+            <div class="alert alert-warning" role="alert">
+                商店名字不可重複
+            </div>
         {% endif %}
+        <form method="post" class="fh5co-form animate-box" data-animate-effect="fadeIn">
+            <div class="form-group ">
+            <div class="row">
+                <div class="col-xs-2">
+                <label for="ex5">shop name</label>
+                {% for message in shop_form.name.errors %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+                <input class="form-control" id="ex5" placeholder="macdonald" type="text" name="name">
+                </div>
+                <div class="col-xs-2">
+                <label for="ex5">shop category</label>
+                {% for message in shop_form.categorys.errors %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+                <input class="form-control" id="ex5" placeholder="fast food" type="text" name="categorys">
+                </div>
+                <div class="col-xs-2">
+                <label for="ex6">latitude</label>
+                {% for message in shop_form.latitude.errors %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+                <input class="form-control" id="ex6" placeholder="121.00028167648875" type="text" name="latitude">
+                </div>
+                <div class="col-xs-2">
+                <label for="ex8">longitude</label>
+                {% for message in shop_form.longitude.errors %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+                <input class="form-control" id="ex8" placeholder="24.78472733371133" type="text" name="longitude">
+                </div>
+            </div>
+            </div>
+        
+            <div class=" row" style=" margin-top: 25px;">
+            <div class=" col-xs-3">
+                <input type="submit" value="Register" class="btn btn-primary" name="Register_submit">
+            </div>
+            </div>
+        </form>
+        <hr>
+
         {% if has_shop is not none%}
         {% for shop in has_shop %}
         <div class="jumbotron">
@@ -449,6 +459,17 @@
       });
     });
   </script>
+  {% with messages = get_flashed_messages(category_filter=["register success"]) %}
+  {% if messages %}
+      <div class="model-body">
+          {% for message in messages %}
+              <script>
+                  window.alert( "註冊成功" )
+              </script>
+          {% endfor %}
+      </div>
+  {% endif %}
+{% endwith %}
 
   <!-- Option 2: Separate Popper and Bootstrap JS -->
   <!--

@@ -249,30 +249,38 @@
             <div class="row">
                 <div class="col-xs-2">
                 <label for="ex5">shop name</label>
-                {% for message in shop_form.name.errors %}
-                    <div>{{ message }}</div>
-                {% endfor %}
+                {% if shop_form.Register_submit.data %}
+                    {% for message in shop_form.name.errors %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
                 <input class="form-control" id="ex5" placeholder="macdonald" type="text" name="name">
                 </div>
                 <div class="col-xs-2">
                 <label for="ex5">shop category</label>
-                {% for message in shop_form.categorys.errors %}
-                    <div>{{ message }}</div>
-                {% endfor %}
+                {% if shop_form.Register_submit.data %}
+                    {% for message in shop_form.categorys.errors %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
                 <input class="form-control" id="ex5" placeholder="fast food" type="text" name="categorys">
                 </div>
                 <div class="col-xs-2">
                 <label for="ex6">latitude</label>
-                {% for message in shop_form.latitude.errors %}
-                    <div>{{ message }}</div>
-                {% endfor %}
+                {% if shop_form.Register_submit.data %}
+                    {% for message in shop_form.latitude.errors %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
                 <input class="form-control" id="ex6" placeholder="121.00028167648875" type="text" name="latitude">
                 </div>
                 <div class="col-xs-2">
                 <label for="ex8">longitude</label>
-                {% for message in shop_form.longitude.errors %}
-                    <div>{{ message }}</div>
-                {% endfor %}
+                {% if shop_form.Register_submit.data %}
+                    {% for message in shop_form.longitude.errors %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
                 <input class="form-control" id="ex8" placeholder="24.78472733371133" type="text" name="longitude">
                 </div>
             </div>
@@ -298,41 +306,43 @@
         </div>
         {% endfor %}
         <h3>ADD</h3>
-
-        <div class="form-group ">
-          <div class="row">
-
-            <div class="col-xs-6">
-              <label for="ex3">meal name</label>
-              <input class="form-control" id="ex3" type="text">
+        <form method="post" enctype=multipart/form-data class="fh5co-form animate-box" data-animate-effect="fadeIn">
+            <div class="form-group ">
+            <div class="row">
+                <div class="col-xs-6">
+                <label for="ex3">shop name</label>
+                <input class="form-control" id="ex3" type="text" name = "shop_name">
+                </div>
+                <div class="col-xs-6">
+                    <label for="ex3">meal name</label>
+                    <input class="form-control" id="ex3" type="text" name = "name">
+                </div>
             </div>
-          </div>
-          <div class="row" style=" margin-top: 15px;">
-            <div class="col-xs-3">
-              <label for="ex7">price</label>
-              <input class="form-control" id="ex7" type="text">
+            <div class="row" style=" margin-top: 15px;">
+                <div class="col-xs-3">
+                <label for="ex7">price</label>
+                <input class="form-control" id="ex7" type="text" name = "price">
+                </div>
+                <div class="col-xs-3">
+                <label for="ex4">quantity</label>
+                <input class="form-control" id="ex4" type="text" name = "quantity">
+                </div>
             </div>
-            <div class="col-xs-3">
-              <label for="ex4">quantity</label>
-              <input class="form-control" id="ex4" type="text">
+
+
+            <div class="row" style=" margin-top: 25px;">
+
+                <div class=" col-xs-3">
+                <label for="ex12">上傳圖片</label>
+                <input id="myFile" type="file" multiple class="file-loading" name = "picture">
+
+                </div>
+                <div class=" col-xs-3">
+                <input style=" margin-top: 15px;" type="submit" value="Add" class="btn btn-primary" name = "Add_submit">
+                </div>
             </div>
-          </div>
-
-
-          <div class="row" style=" margin-top: 25px;">
-
-            <div class=" col-xs-3">
-              <label for="ex12">上傳圖片</label>
-              <input id="myFile" type="file" name="myFile" multiple class="file-loading">
-
             </div>
-            <div class=" col-xs-3">
-
-              <button style=" margin-top: 15px;" type="button" class="btn btn-primary">Add</button>
-            </div>
-          </div>
-        </div>
-
+        </form>
         <div class="row">
           <div class="  col-xs-8">
             <table class="table" style=" margin-top: 15px;">

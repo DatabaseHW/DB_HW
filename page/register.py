@@ -4,6 +4,7 @@ from flask import *
 from model.user import User
 from configuration import user_database, website
 from forms import RegisterForm
+from model.user import User
 
 @website.route("/sign-up", methods = ['GET','POST'])
 def Register():

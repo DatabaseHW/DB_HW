@@ -17,11 +17,12 @@ def home():
     if Shop_Form.Register_submit.data and Shop_Form.validate():
         shop = Shop.query.filter_by(name=Shop_Form.name.data).first()
         if shop is not None:
-            return render_template('nav.html', name_repeated=True, has_shop=None, user = User.query.filter_by(id=current_user.get_id()).first())
+            return render_template('nav.html', shop_form = Shop_Form, name_repeated=True, has_shop=Shop.query.filter_by(uid=current_user.get_id()), user = User.query.filter_by(id=current_user.get_id()).first())
         else:
             new_shop = Shop(current_user.get_id(), Shop_Form.name.data,Shop_Form.latitude.data,Shop_Form.longitude.data,Shop_Form.categorys.data)
             user_database.session.add(new_shop)
             user_database.session.commit()
-            return render_template('nav.html', name_repeated=False, user = User.query.filter_by(id=current_user.get_id()).first(), has_shop=new_shop)
+            flash("註冊成功",category="register success")
+            return render_template('nav.html', shop_form = Shop_Form, name_repeated=False, user = User.query.filter_by(id=current_user.get_id()).first(), has_shop=Shop.query.filter_by(uid=current_user.get_id()))
 
-    return render_template("nav.html", name_repeated=False, user = User.query.filter_by(id=current_user.get_id()).first(), has_shop=Shop.query.filter_by(uid=current_user.get_id()))
+    return render_template("nav.html", shop_form = Shop_Form, name_repeated=False, user = User.query.filter_by(id=current_user.get_id()).first(), has_shop=Shop.query.filter_by(uid=current_user.get_id()))

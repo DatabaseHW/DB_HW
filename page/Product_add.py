@@ -17,7 +17,7 @@ def product_add(Shop_Form, Product_Form):
     selling_shop = Shop.query.filter_by(uid = current_user.get_id(), name = Product_Form.shop_name.data).first()
 
     if selling_shop is None:
-        flash("商店不存在", category="Product add errors")
+        flash("商店不存在", category="product add errors")
         return render_template(
                                 'nav.html', 
                                 shop_product = Shop.query.join(Shop, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
@@ -28,7 +28,7 @@ def product_add(Shop_Form, Product_Form):
                             )
     product = Product.query.filter_by(name=Product_Form.name.data, sid = selling_shop.sid).first()
     if product is not None:
-        flash("商品已經存在", category="Product add errors")
+        flash("商品已經存在", category="product add errors")
         return render_template(
                                 'nav.html', 
                                 shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),

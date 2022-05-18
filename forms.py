@@ -1,5 +1,6 @@
 from ast import Num
 from flask_wtf import FlaskForm
+from numpy import set_string_function
 from wtforms import *
 from wtforms.validators import *
 from flask_wtf.file import *
@@ -32,5 +33,9 @@ class ProductForm(FlaskForm):
     name = StringField(u'名字',validators=[DataRequired(message=u'名字不可為空')])
     quantity = IntegerField(u'數量',validators=[DataRequired(message=u'數量不可為空'), NumberRange(min=0, message="數量不可為負" )])
     price = IntegerField(u'價格',validators=[DataRequired(message=u'價格不可為空'), NumberRange(min=0, message="價格不可為負" )])
-    picture = FileField(u'圖片', validators=[FileAllowed(UploadSet(extensions=IMAGES),"格式錯誤，僅限上傳圖片檔")])
+    picture = FileField(u'圖片', validators=[FileAllowed(UploadSet(extensions=IMAGES),message="格式錯誤，僅限上傳圖片檔")])
     Add_submit = SubmitField('Add_submit')
+
+class DeleteForm(FlaskForm):
+    delete_pid = StringField(u'delete_pid')
+    Delete_submit = SubmitField('Delete_submit')

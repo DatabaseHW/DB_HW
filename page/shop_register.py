@@ -16,7 +16,7 @@ def shop_register(Shop_Form, Product_Form):
         flash("商店名稱不可重複",category="name_repeated")
         return render_template(
                                     'nav.html', 
-                                    shop_product = Shop.query.outerjoin(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                                    shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
                                     shop_form = Shop_Form, 
                                     product_form = Product_Form,
                                     user = User.query.filter_by(id=current_user.get_id()).first(), 
@@ -29,7 +29,7 @@ def shop_register(Shop_Form, Product_Form):
         flash("註冊成功",category="register success")
         return render_template(
                                     'nav.html', 
-                                    shop_product = Shop.query.outerjoin(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                                    shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
                                     shop_form = Shop_Form, 
                                     product_form = Product_Form,
                                     user = User.query.filter_by(id=current_user.get_id()).first(), 

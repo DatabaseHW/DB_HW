@@ -307,8 +307,8 @@
                             <p>product name: {{_product.name}}</p>
                             <p>product quantity: {{_product.quantity}}</p>
                             <p>product price: {{_product.price}}</p>
-                            {% if _product.picture is not none %}
-                                <p><img src="data:image/jpeg;base64,{{ _product.picture | safe }}"><p>
+                            {% if _product.picture != '' %}
+                                <p><img src="data:image/jpg;base64,{{ _product.picture | safe }}"><p>
                             {% endif %}
                         {% endif %}
                     {% endfor %}

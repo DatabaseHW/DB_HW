@@ -26,7 +26,7 @@ def shop_register(Shop_Form, Product_Form):
         new_shop = Shop(current_user.get_id(), Shop_Form.name.data,Shop_Form.latitude.data,Shop_Form.longitude.data,Shop_Form.categorys.data)
         user_database.session.add(new_shop)
         user_database.session.commit()
-        flash("註冊成功",category="register success")
+        flash("商店註冊成功",category="register success")
         return render_template(
                                     'nav.html', 
                                     shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),

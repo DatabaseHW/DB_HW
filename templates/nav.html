@@ -328,37 +328,41 @@
                                           {% endif %}
                                         </td>
                                         <td>{{ _product.name }}</td>
-                                        <td>{{ _product.quantity }}</td>
                                         <td>{{ _product.price }}</td>
+                                        <td>{{ _product.quantity }}</td>
                                         <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#Modal-Product-1">Edit</button></td>
                                         <!-- Modal -->
-                                          <div class="modal fade" id="Modal-Product-1" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    
+                                        <div class="modal fade" id="Modal-Product-1" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
-                                              <div class="modal-content">
-                                                <div class="modal-header">
-                                                <h5 class="modal-title" id="staticBackdropLabel">{{ _product.name }} Edit</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                  <span aria-hidden="true">&times;</span>
-                                                </button>
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="staticBackdropLabel">{{ _product.name }} Edit</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <form method="post">
+                                                        <div class="modal-body">
+                                                            <div class="row" >
+                                                                <div class="col-xs-6">
+                                                                    <label for="ex71">price</label>
+                                                                    <input class="form-control" id="ex71" type="text" name="price_modify">
+                                                                </div>
+                                                                <div class="col-xs-6">
+                                                                    <label for="ex41">quantity</label>
+                                                                    <input class="form-control" id="ex41" type="text" name="quantity_modify">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <input value="{{ _product.pid | safe}}" name = "modify_pid" hidden = True>
+                                                            <input type="submit" value="Edit" class="btn btn-secondary" name="Modify_submit">
+                                                        </div>
+                                                    </form>  
                                                 </div>
-                                                <div class="modal-body">
-                                                <div class="row" >
-                                                  <div class="col-xs-6">
-                                                    <label for="ex71">price</label>
-                                                    <input class="form-control" id="ex71" type="text">
-                                                  </div>
-                                                  <div class="col-xs-6">
-                                                    <label for="ex41">quantity</label>
-                                                    <input class="form-control" id="ex41" type="text">
-                                                  </div>
-                                                </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Edit</button>
-                                                </div>
-                                              </div>
                                             </div>
-                                          </div>
+                                        </div>
                                         <td>
                                             <form method="post">
                                                 <input value="{{ _product.pid | safe}}" name = "delete_pid" hidden = True>
@@ -440,32 +444,12 @@
       });
     });
   </script>
-  {% with messages = get_flashed_messages(category_filter=["register success"]) %}
-  {% if messages %}
-      <div class="model-body">
-            <script>
-                window.alert( "註冊成功" );
-            </script>
-      </div>
-  {% endif %}
-{% endwith %}
-{% with messages = get_flashed_messages(category_filter=["product add errors"]) %}
+{% with messages = get_flashed_messages(category_filter=["product add errors", "product delete success", "product add success", "register success", "product modify success"]) %}
     {% if messages %}
         <div class="model-body">
             {% for message in messages %}
                 <script>
                     window.alert( "{{message | safe}}" );
-                </script>
-            {% endfor %}
-        </div>
-    {% endif %}
-{% endwith %}
-{% with messages = get_flashed_messages(category_filter=["product add success"]) %}
-    {% if messages %}
-        <div class="model-body">
-            {% for message in messages %}
-                <script>
-                    window.alert( "商品新增成功" );
                 </script>
             {% endfor %}
         </div>

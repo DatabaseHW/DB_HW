@@ -42,7 +42,7 @@ def product_add(Shop_Form, Product_Form):
         new_product = Product(selling_shop.sid, Product_Form.name.data, Product_Form.quantity.data, Product_Form.price.data, images)
         user_database.session.add(new_product)
         user_database.session.commit()
-        flash("新增成功",category="product add success")
+        flash("商品新增成功",category="product add success")
         return render_template(
                                 'nav.html', 
                                 shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),

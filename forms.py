@@ -1,5 +1,6 @@
 from ast import Num
 from flask_wtf import FlaskForm
+from more_itertools import quantify
 from numpy import set_string_function
 from wtforms import *
 from wtforms.validators import *
@@ -39,3 +40,9 @@ class ProductForm(FlaskForm):
 class DeleteForm(FlaskForm):
     delete_pid = StringField(u'delete_pid')
     Delete_submit = SubmitField('Delete_submit')
+
+class ModifyForm(FlaskForm):
+    modify_pid = StringField(u'modify_pid')
+    quantity_modify = IntegerField(u'數量',validators=[DataRequired(message=u'數量不可為空'), NumberRange(min=0, message="數量不可為負" )])
+    price_modify = IntegerField(u'價格',validators=[DataRequired(message=u'價格不可為空'), NumberRange(min=0, message="價格不可為負" )])
+    Modify_submit = SubmitField('Modify_submit')

@@ -40,8 +40,17 @@ class OrderForm(FlaskForm):
     calcPrice_total = IntegerField('calcPrice_total')
     order_submit = SubmitField('order_submit')
 
-class MyOrderForm(FlaskForm):
-    my_order_submit = StringField('status')
+# class MyOrderForm(FlaskForm):
+#     my_order_submit = StringField('status')
+
+class CancelMyOrderForm(FlaskForm):
+    searchMyOrder_Cancel_submit = StringField('searchMyOrder_Cancel_submit')
+
+class CancelShopOrderForm(FlaskForm):
+    searchShopOrder_Cancel_submit = StringField('searchShopOrder_Cancel_submit')
+
+class DoneShopOrderForm(FlaskForm):
+    searchShopOrder_Done_submit = StringField('searchShopOrder_Done_submit')
 
 class ShopForm(FlaskForm):
     name = StringField(u'名字',validators=[DataRequired(message=u'名字不可為空')])

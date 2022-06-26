@@ -34,9 +34,7 @@
       <li class="active"><a href="#home">Home</a></li>
       <li><a href="#shop">shop</a></li>
       <li><a href="#myorder">MyOrder</a></li>
-      <!-- {% for _shop in has_shop %} -->
       <li><a href="#shoporder">Shop Order</a></li>
-      <!-- {% endfor %} -->
       <li><a href="#transactionrecord">Transaction Record</a></li>
     </ul>
 
@@ -206,6 +204,11 @@
               </thead>
               <tbody>
                 {% for searchShop in searchShops %}    
+                  <script>
+                    var prodpid{{ searchShop.ID }}=[]
+                    var prodpric{{ searchShop.ID }}=[]
+                  </script>
+
                   <tr>
                     <th scope="row">{{ searchShop.ID }}</th>
                 
@@ -263,21 +266,23 @@
                                           <td>
                                             <div>
                                               <input class="form-control" id="productNum{{ product.pid }}" value=0 name="productNum{{ product.pid }}"/>
-                                              <p>productNum{{ product.pid }}</p>
                                               <button onClick="valInc('{{ product.pid }}')">+</button>
                                               <button onClick="valDec('{{ product.pid }}')">-</button>
                                               <script>
                                                 function valInc (productPid) {
                                                   let counterVal = document.getElementById("productNum" + productPid);
                                                   counterVal.value = parseInt(counterVal.value) + 1;
-                                                  if(counterVal.value < 0)
+                                                  if(parseInt(counterVal.value) < 0)
                                                     counterVal.value = 0;
+
+                                                  console.log(counterVal.value)
                                                 }
                                                 function valDec (productPid) {
                                                   let counterVal = document.getElementById("productNum" + productPid);
                                                   counterVal.value = parseInt(counterVal.value) - 1;
-                                                  if(counterVal.value < 0)
+                                                  if(parseInt(counterVal.value) < 0)
                                                     counterVal.value = 0;
+                                                  console.log(counterVal.value)
                                                 }
                                               </script>
                                             </div>
@@ -293,7 +298,7 @@
                             </div>
                             <label class="control-label col-sm-1" for="delivery_type">Type</label>
                             <div class="col-sm-5">
-                              <select class="form-control" id="delivery_type" name="delivery_type">
+                              <select class="form-control" id="{{ searchShop.ID }}delivery_type" name="delivery_type">
                                 <option>Delivery</option>
                                 <option>Pick-up</option>
                               </select>
@@ -301,7 +306,7 @@
                             <form method="post">
                               <div class="modal-footer">
                                 <input value="{{ searchShop.sid | safe }}" name="order_sid">
-                                <input type="button" value="Calculate Price" class="btn btn-info" data-toggle="modal" onClick="calcSubtotal();calcDeliveryFee();calcTotal()" data-target="#calcprice{{ searchShop.ID }}" name = "order_calc_price_submit">
+                                <input type="button" value="Calculate Price" class="btn btn-info" data-toggle="modal" onClick="calc{{ searchShop.ID }}()" data-target="#calcprice{{ searchShop.ID }}" name = "order_calc_price_submit">
                                 <!-- <input type="submit" value="Calculate Price" class="btn btn-info" data-toggle="modal" data-target="#calcprice{{ searchShop.ID }}" name = "order_calc_price_submit"> -->
                               </div>
                             </form>
@@ -360,82 +365,84 @@
                                   </table>
                                 </div>
                               </div>
-                              
-  
                               <!--  -->
                               </div>
                               <div class="modal-footer">
                                 <table class="table" style=" margin-top: 15px;">
                                   <tbody>
-                                    <script>
-                                      function getAllNum() {
-
-
-                                        array.forEach(element => {
-                                          
-                                        });
-
-                                        // foreach
-                                        // foreach {
-                                        //   getNum();
-                                        // }
-                                      }
-                                    </script>
+                                    <div id="{{ searchShop.ID }}content"></div>
+                                    <input value="-1" id="{{ searchShop.ID }}deliveryFee_subtotal" name="deliveryFee_subtotal" hidden = True>
                                     {% for _product in searchShop.products %}
                                       <input value="{{ _product.pid }}" hidden=True/>
-                                        <script>
-                                          function getNum(productPid) {
-                                            var el = document.getElementById('content');
-                                            var num = document.getElementById("productNum" + productPid);
-                                            var content;
-                                            if  (num > 0) {
-                                              content = '<tr><td>{% if _product.picture != "" %}<p><img src="data:image/jpeg;base64,{{ _product.picture | safe }}" with="50" heigh="10"><p>{% endif %}</td><td>{{ _product.name }}</td><td>{{ _product.price }}</td><td>{{ _product.quantity }}</td></tr>';
-                                              }
-                                              else {
-                                                content = '';
-                                              }
-                                              el.insertAdjacentHTML('afterbegin', content);
+                                      <script>  
+                                        prodpid{{ searchShop.ID }}.push("{{ _product.pid }}")
+                                        prodpric{{ searchShop.ID }}.push("{{ _product.price }}")
+                                        function dd{{ searchShop.ID }}(pids,pric){
+                                          
+                                          console.log("initialize subtotal value")
+                                          document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value = 0
+                                          for(let i=0;i<pids.length;i++){
+                                            console.log(pids[i])
+                                            console.log(pric[i])
+
+                                            var el{{ searchShop.ID }} = document.getElementById('{{ searchShop.ID }}content');
+                                            var num{{ searchShop.ID }} = parseInt(document.getElementById("productNum"+pids[i]).value);
+                                            var content{{ searchShop.ID }};
+                                            console.log("num{{ searchShop.ID }}",num{{ searchShop.ID }})
+                                            if  (num{{ searchShop.ID }} > 0) {
+                                              content{{ searchShop.ID }} = "<tr><td>Hello world</td></tr>"
+                                              // content = '<tr><td>{% if _product.picture != "" %}<p><img src="data:image/jpeg;base64,{{ _product.picture | safe }}" with="50" heigh="10"><p>{% endif %}</td><td>"{{ _product.name }}"</td><td>"{{ _product.price }}"</td><td>"{{ _product.quantity }}"</td></tr>';
+                                              console.log(pids[i])
+                                              document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value = parseInt(pric[i]) * num{{ searchShop.ID }} + parseInt(document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value);
+                                              console.log("cur sub total")
+                                              console.log(document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value);
+                                            }
+                                            else {
+                                              content{{ searchShop.ID }} = '';
+                                            }
+                                            el{{ searchShop.ID }}.insertAdjacentHTML('afterbegin', content{{ searchShop.ID }});
                                           }
-                                        </script>
+                                        }
+                                        
+                                        function calc{{ searchShop.ID }}(){
+                                          dd{{ searchShop.ID }}(prodpid{{ searchShop.ID }},prodpric{{ searchShop.ID }});
+                                          calcSubtotal{{ searchShop.ID }}();
+                                          calcDeliveryFee{{ searchShop.ID }}();
+                                          calcTotal{{ searchShop.ID }}();
+                                        }
+                                        function calcSubtotal{{ searchShop.ID }}(){
+                                          document.getElementById("{{ searchShop.ID }}calcPrice_subtotal").value = document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value;
+                                        }
+                                        function calcDeliveryFee{{ searchShop.ID }}() {
+                                          let deliveryType = document.getElementById("{{ searchShop.ID }}delivery_type");
+                                          let deliveryFee_delivery = document.getElementById("{{ searchShop.ID }}deliveryFee_delivery");
+                                          let calcPrice_deliveryFee = document.getElementById("{{ searchShop.ID }}calcPrice_deliveryFee");
+                                          if(deliveryType.value === "Pick-up"){
+                                            calcPrice_deliveryFee.value = 0;
+                                          }
+                                          else{
+                                            calcPrice_deliveryFee.value = deliveryFee_delivery.value;
+                                          }
+                                        }
+                                        function calcTotal{{ searchShop.ID }}() {
+                                          let subtotal = document.getElementById("{{ searchShop.ID }}calcPrice_subtotal");
+                                          let deliveryFee = document.getElementById("{{ searchShop.ID }}calcPrice_deliveryFee");
+                                          let total = document.getElementById("{{ searchShop.ID }}calcPrice_total");
+                                          total.value = parseInt(subtotal.value) + parseInt(deliveryFee.value);
+                                        }
+                                      </script>
                                     {% endfor %}
                                   </tbody>
                                 </table>
-                                <h5>Subtotal: $<input class="form-control" id="calcPrice_subtotal" value=-1 name="calcPrice_subtotal"/></h5>
-                                <h5>Delivery fee: $ <input class="form-control" id="calcPrice_deliveryFee" value="-1" name="calcPrice_deliveryFee"/></h5>
-                                <h5>Total Price: $ <input class="form-control" id="calcPrice_total" value=100 name="calcPrice_total"/></h5>
+                                <h5>Subtotal: $<input class="form-control" id="{{ searchShop.ID }}calcPrice_subtotal" value=-1 name="calcPrice_subtotal"/></h5>
+                                <h5>Delivery fee: $ <input class="form-control" id="{{ searchShop.ID }}calcPrice_deliveryFee" value="-1" name="calcPrice_deliveryFee"/></h5>
+                                <h5>Total Price: $ <input class="form-control" id="{{ searchShop.ID }}calcPrice_total" value=100 name="calcPrice_total"/></h5>
                                 <input value="{{ searchShop.sid | safe }}" name="order_sid" hidden = True>
-                                <input value="{{ searchShop.deliveryFee | safe }}" id="deliveryFee_delivery" name="deliveryFee_delivery" hidden = True>
+                                <input value="{{ searchShop.deliveryFee | safe }}" id="{{ searchShop.ID }}deliveryFee_delivery" name="deliveryFee_delivery" hidden = True>
                                 <input type="submit" value="Order" class="btn btn-primary" name = "order_submit">
                                 <!-- <input type="submit" value="Order" class="btn btn-primary" name = "order_text"> -->
                                 <script>
-                                  function calcSubtotal() {
-                                    let subtotal = document.getElementById("calcPrice_subtotal");
-                                    // let products = searchShop.products;
-                                    
-                                    subtotal.value = 0;
-                                    // for(product in products ){
-                                    //   let price = product.price;
-                                    //   let num = document.getElementById("productNum" + product.pid);
-                                    //   subtotal += parseInt(price.value) * parseInt(num.value);
-                                    // }
-                                  }
-                                  function calcDeliveryFee() {
-                                    let deliveryType = document.getElementById("delivery_type");
-                                    let deliveryFee_delivery = document.getElementById("deliveryFee_delivery");
-                                    let deliveryFee = document.getElementById("calcPrice_deliveryFee");
-                                    if(deliveryType.value === "Pick-up"){
-                                      deliveryFee.value = 0;
-                                    }
-                                    else{
-                                      deliveryFee.value = deliveryFee_delivery.value;
-                                    }
-                                  }
-                                  function calcTotal() {
-                                    let subtotal = document.getElementById("calcPrice_subtotal");
-                                    let deliveryFee = document.getElementById("calcPrice_deliveryFee");
-                                    let total = document.getElementById("calcPrice_total");
-                                    total.value = parseInt(subtotal.value) + parseInt(deliveryFee.value);
-                                  }
+          
                                 </script>
                               </div>
                             </form>
@@ -929,13 +936,14 @@
       sender = JSON.stringify(val)
       xhr.open('POST',URL);
       xhr.send(sender);
-      console.log(val)
+      window.location.href ="http://tonych.me:3450?myOrderStatus=7";
     }
     $(document).ready(function () {
       $(".nav-tabs a").click(function () {
         $(this).tab('show');
       });
     });
+
   </script>
 {% with messages = get_flashed_messages(category_filter=["product add errors", "product delete success", "product add success", "register success", "product modify success"]) %}
     {% if messages %}

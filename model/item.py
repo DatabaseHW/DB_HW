@@ -13,6 +13,8 @@ from model.user import User
 from model.product import Product
 from model.order import Order
 
+from datetime import datetime, date
+
 bcrypt = Bcrypt(website)
 
 class Item(user_database.Model, UserMixin):
@@ -21,11 +23,11 @@ class Item(user_database.Model, UserMixin):
     oid = user_database.Column(user_database.String(256), ForeignKey("orders.oid"))
     pid = user_database.Column(user_database.String(256), ForeignKey("products.pid"))
     quantity = user_database.Column(user_database.Integer)
-    price = user_database.Column(user_database.Integer, ForeignKey("products.price"))
+    price = user_database.Column(user_database.Integer)
 
     def __init__(self, oid, pid, quantity, price, iid = None):
         if(iid == None):
-            self.iid = bcrypt.generate_password_hash(oid + pid)
+            self.iid = bcrypt.generate_password_hash(oid + pid + quantity)
         else:
             self.iid = iid
         self.oid = oid

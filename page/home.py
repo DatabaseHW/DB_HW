@@ -8,15 +8,16 @@ import pymysql.cursors
 from flask_sqlalchemy import *
 
 from configuration import website, user_database
-from forms import LoginForm, ModifyForm, ShopForm, ProductForm, DeleteForm, RechargeForm, LocationForm, OrderForm, MyOrderForm
+from forms import LoginForm, ModifyForm, ShopForm, ProductForm, DeleteForm, RechargeForm, LocationForm, OrderForm, CancelMyOrderForm, CancelShopOrderForm, DoneShopOrderForm
 from model.order import Order #, OrderCalcPriceForm
 from model.shop import Shop
 from model.user import User
 from model.product import Product
+from model.item import Item
 import bcrypt
 from flask_bcrypt import Bcrypt
 from page.order import order
-from page.myorder import myorder
+# from page.myorder import myorder
 # from page.orderCalcPrice import orderCalcPrice
 from page.location_modify import location_modify
 from page.recharge import recharge
@@ -95,9 +96,11 @@ def haversine(lon1, lat1, lon2, lat2):
 
 # bcrypt = Bcrypt(website)
 
-def searchmyorder():
+def searchmyorder(status):
     searchMyOrder = Order.query.all()
-    print("searchMyOrder:", searchMyOrder)
+    # print("[304] status:", request.args.get('myOrderStatus'))
+    # print("[100] searchMyOrder:", searchMyOrder)
+    # print(getframeinfo(currentframe()).lineno)
     
     i = 0
     while(i < len(searchMyOrder)):
@@ -106,8 +109,7 @@ def searchmyorder():
             continue
         i += 1
 
-    status = request.args.get('status')
-    if status != "All":
+    if status != 0:
         i = 0
         while(i < len(searchMyOrder)):
             if((searchMyOrder[i].status != status)):
@@ -115,13 +117,22 @@ def searchmyorder():
                 continue
             i += 1
     
-    # done search my order
-    searchMyOrder.products = []
     # go through item, check for the order in searchMyOrder list
-    # get from item
+    for i in range(len(searchMyOrder)):
+        searchMyOrder[i].products = []
     
+    all_items = Item.query.all()
+    for i in range(len(searchMyOrder)):
+        for y in all_items:
+            print("[127] oid:", searchMyOrder[i].oid, y.oid)
+            if searchMyOrder[i].oid == y.oid:
+                print("[128]")
+                prod = Product.query.filter_by(pid=y.pid).first()
+                print("[129] prod:", type(prod), prod)
+                new_product = Product(prod.sid, prod.name, y.quantity, prod.price, prod.picture, prod.pid)
+                searchMyOrder[i].products.append(new_product)
 
-
+    return searchMyOrder
 
 
 def searchshoporder():
@@ -147,10 +158,10 @@ def searchshoporder():
     # done search shop order
 
 
-@website.route('/', methods = ['GET','POST'])
+@website.route('/<int:myOrderStatus>', methods = ['GET','POST'])
 @login_required
-def home():
-
+def homee(myOrderStatus=0):
+    print(myOrderStatus)
     db__ = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='dbproject', charset='utf8')
     cur = db__.cursor()
     # if request.args.get('shopname') == "" and request.args.get('category') == "" :
@@ -186,7 +197,7 @@ def home():
     # distance
     # print(type(User.query.all()), User.query.all())
     # print(User.query.filter_by(id=current_user.get_id()).first(), User.query.filter_by(id=current_user.get_id()).all(), User.query.filter_by(id=current_user.get_id()))
-    print("[187] type ", type(request.args.get('distance')), request.args.get('distance'))
+    # print("[187] type ", type(request.args.get('distance')), request.args.get('distance'))
     if str(type(request.args.get('distance'))) == "<class 'str'>":
         distanceL, distanceU = distance_range(request.args.get('distance'))
         remove_list = []
@@ -258,7 +269,7 @@ def home():
     #     print("[191] itme in searchShops", y)
     
     # print("[186] all:", Shop.query.all())
-    # print("[187] searchShops:", searchShops)
+    # print("[270] searchShops:", searchShops.pro)
     for _ in range(len(searchShops)):
         # print("[191] vars:", vars(searchShops[_]))
         searchShops[_].ID = _ + 1
@@ -268,7 +279,7 @@ def home():
     # my order list
     # searchMyOrders=
     # OrderCalcPrice_Form = OrderCalcPriceForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
-    MyOrder_Form = MyOrderForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
+    # MyOrder_Form = MyOrderForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     Order_Form = OrderForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     Location_Form = LocationForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     Recharge_Form = RechargeForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
@@ -277,7 +288,7 @@ def home():
     Delete_Form = DeleteForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     Modify_Form = ModifyForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     
-    print("MyOrder_Form.my_order_submit.data:", MyOrder_Form.my_order_submit.data)
+    # print("MyOrder_Form.my_order_submit.data:", MyOrder_Form.my_order_submit.data)
 
     # print("order_sid:", OrderCalcPrice_Form.order_sid.data)
     # print("order_calc_price_submit:", OrderCalcPrice_Form.order_calc_price_submit.data)
@@ -286,9 +297,9 @@ def home():
     # if OrderCalcPrice_Form.order_calc_price_submit.data and OrderCalcPrice_Form.validate():
         # return orderCalcPrice(Shop_Form, Product_Form, searchShops, OrderCalcPrice_Form)
 
-    if MyOrder_Form.my_order_submit.data:
-        return myorder(Shop_Form, Product_Form, MyOrder_Form, searchShops)
-    elif Order_Form.order_submit.data and Order_Form.validate():
+    # if MyOrder_Form.my_order_submit.data:
+    #     return myorder(Shop_Form, Product_Form, MyOrder_Form, searchShops)
+    if Order_Form.order_submit.data and Order_Form.validate():
         return order(Shop_Form, Product_Form, Order_Form, searchShops)
     elif Location_Form.location_submit.data and Location_Form.validate():
         return location_modify(Shop_Form, Product_Form, Location_Form, searchShops)
@@ -304,30 +315,7 @@ def home():
         return product_modify(Shop_Form, Product_Form, Modify_Form)
 
     #search my order
-    print("[304] status:", request.args.get('myOrderStatus'))
-    searchMyOrder = Order.query.all()
-    print("[306] searchMyOrder:", searchMyOrder)
-    ## print current line number
-    # print(getframeinfo(currentframe()).lineno)
-    i = 0
-    while(i < len(searchMyOrder)):
-        if((searchMyOrder[i].uid != current_user.get_id())):
-            searchMyOrder.remove(searchMyOrder[i])
-            continue
-        i += 1
-
-    status = request.args.get('status')
-    print('status:', status)
-    if status != "All":
-        i = 0
-        while(i < len(searchMyOrder)):
-            if((searchMyOrder[i].status != status)):
-                searchMyOrder.remove(searchMyOrder[i])
-                continue
-            i += 1
-    
-    # done search my order
-    # searchMyOrder.products = []
+    searchMyOrder = searchmyorder(myOrderStatus)
     
     return render_template(
                             "nav.html", 
@@ -342,6 +330,10 @@ def home():
                             searchMyOrders = searchMyOrder
                         )
 
+@website.route('/', methods = ['GET','POST'])
+@login_required
+def home():
+    return homee(0)
 
 
 @website.route('/#myorder', methods = ['GET','POST'])
@@ -359,8 +351,8 @@ def myorder():
                             # shop_form = Shop_Form,
                             # product_form = Product_Form,
                             user = User.query.filter_by(id=current_user.get_id()).first(), 
-                            has_shop=Shop.query.filter_by(uid=current_user.get_id())
-
+                            has_shop=Shop.query.filter_by(uid=current_user.get_id()),
+                            searchMyOrders = [Order("1","1","1","1","1","1","1","1")]
                         )
 
 
@@ -372,15 +364,5 @@ def getStatus():
     Shop_Form = ShopForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     Product_Form = ProductForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     
-    # return "I don't know what to return. QAQ"
-    return render_template(
-                            "nav.html", 
-                            # old version is outerjoin in next line
-                            # shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
-                            # searchShops = searchShops,
-                            shop_form = Shop_Form,
-                            product_form = Product_Form,
-                            user = User.query.filter_by(id=current_user.get_id()).first(), 
-                            has_shop=Shop.query.filter_by(uid=current_user.get_id())
-
-                        )
+    searchMyOrder = Order.query.all()
+    return "I don't know what to return. QAQ"

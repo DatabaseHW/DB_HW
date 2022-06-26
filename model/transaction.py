@@ -18,22 +18,22 @@ bcrypt = Bcrypt(website)
 
 class Transaction(user_database.Model, UserMixin):
     __tablename__ = 'transactions'
+    # rid 
     tid = user_database.Column(user_database.String(256), primary_key = True)
-    # rid = 
     action = user_database.Column(user_database.String(256))
-    time = user_database.Column(user_database.String(256))
-    trader = user_database.Column(user_database.String(256), ForeignKey("orders.name"))
+    trans_time = user_database.Column(user_database.String(256))
+    trader_id = user_database.Column(user_database.String(256))
     change = user_database.Column(user_database.Integer)
 
-    def __init__(self, oid, pid, quantity, price, iid = None): # TODO
-        if(iid == None):
-            self.iid = bcrypt.generate_password_hash(oid + pid)
+    def __init__(self, action, trans_time, trader_id, change, tid = None): # TODO
+        if(tid == None):
+            self.tid = bcrypt.generate_password_hash(action + trans_time + trader_id + change)
         else:
-            self.iid = iid
-        self.oid = oid
-        self.pid = pid
-        self.quantity = quantity
-        self.price = price
+            self.tid = tid
+        self.action = action
+        self.trans_time = trans_time
+        self.trader_id = trader_id
+        self.change = change
 
     def __repr__(self):
         return f'<Transaction {self.tid!r}>'

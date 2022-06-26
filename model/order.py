@@ -28,7 +28,7 @@ class Order(user_database.Model, UserMixin):
 
     def __init__(self, uid, sid, status, start, shop_name, price, oid = None, end = ""):
         if oid == None:
-            self.oid = bcrypt.generate_password_hash(uid + sid + start)
+            self.oid = bcrypt.generate_password_hash(uid + sid + start) # suck
         else:
             self.oid = oid
         self.uid = uid

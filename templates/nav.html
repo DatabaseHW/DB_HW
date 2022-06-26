@@ -400,15 +400,25 @@
                                     {% endfor %}
                                   </tbody>
                                 </table>
-                                <h5>Subtotal: $<input class="form-control" id="calcPrice_subtotal" value=2 name="calcPrice_subtotal"/></h5>
-                                <h5>Delivery fee: $ <input class="form-control" id="calcPrice_deliveryFee" value="30" name="calcPrice_deliveryFee"/></h5>
+                                <h5>Subtotal: $<input class="form-control" id="calcPrice_subtotal" value=-1 name="calcPrice_subtotal"/></h5>
+                                <h5>Delivery fee: $ <input class="form-control" id="calcPrice_deliveryFee" value="-1" name="calcPrice_deliveryFee"/></h5>
                                 <h5>Total Price: $ <input class="form-control" id="calcPrice_total" value=100 name="calcPrice_total"/></h5>
                                 <input value="{{ searchShop.sid | safe }}" name="order_sid" hidden = True>
                                 <input value="{{ searchShop.deliveryFee | safe }}" id="deliveryFee_delivery" name="deliveryFee_delivery" hidden = True>
                                 <input type="submit" value="Order" class="btn btn-primary" name = "order_submit">
                                 <!-- <input type="submit" value="Order" class="btn btn-primary" name = "order_text"> -->
                                 <script>
-                                  
+                                  function calcSubtotal() {
+                                    let subtotal = document.getElementById("calcPrice_subtotal");
+                                    // let products = searchShop.products;
+                                    
+                                    subtotal.value = 0;
+                                    // for(product in products ){
+                                    //   let price = product.price;
+                                    //   let num = document.getElementById("productNum" + product.pid);
+                                    //   subtotal += parseInt(price.value) * parseInt(num.value);
+                                    // }
+                                  }
                                   function calcDeliveryFee() {
                                     let deliveryType = document.getElementById("delivery_type");
                                     let deliveryFee_delivery = document.getElementById("deliveryFee_delivery");
@@ -425,17 +435,6 @@
                                     let deliveryFee = document.getElementById("calcPrice_deliveryFee");
                                     let total = document.getElementById("calcPrice_total");
                                     total.value = parseInt(subtotal.value) + parseInt(deliveryFee.value);
-                                  }
-                                  function calcSubtotal() {
-                                    let subtotal = document.getElementById("calcPrice_subtotal");
-                                    // let products = searchShop.products;
-                                    
-                                    subtotal.value = 0;
-                                    // for(product in products ){
-                                    //   let price = product.price;
-                                    //   let num = document.getElementById("productNum" + product.pid);
-                                    //   subtotal += parseInt(price.value) * parseInt(num.value);
-                                    // }
                                   }
                                 </script>
                               </div>
@@ -653,18 +652,18 @@
         
         <h3>Search My order</h3>
         <label class="control-label col-sm-1" for="status">status</label>
-        <form action="{{ url_for('myorder') }}">
+        <!-- <form action="{{ url_for('myorder') }}"> -->
           <!-- need POST ? -->
-          <div class="col-sm-5">
-            <select class="form-control" id="mySel" name="myOrderStatus" onchange="refreshPage()">
-              <option value="0">All</option>
-              <option value="1">未完成</option>
-              <option value="2">已完成</option>
-              <option value="3">已取消</option>
-              <!-- selected -->
-            </select>
-          </div>
-        </form>
+        <div class="col-sm-5">
+          <select class="form-control" id="mySel" name="myOrderStatus" onchange="subb('mySel','myOrderStatus')">
+            <option value="0">All</option>
+            <option value="1">未完成</option>
+            <option value="2">已完成</option>
+            <option value="3">已取消</option>
+            <!-- selected -->
+          </select>
+        </div>
+        <!-- </form> -->
         
         <div class="row">
           <div class="  col-xs-8">
@@ -923,8 +922,14 @@
     function init(){
       document.getElementById('sel1').onchange=function(){subm(myOrderStatus)}
     }
-    function refreshPage(){
-      window.location.reload();
+    function subb(id,key){
+      const URL = '/get-status'
+      const xhr = new XMLHttpRequest();
+      var val=document.getElementById(id).value
+      sender = JSON.stringify(val)
+      xhr.open('POST',URL);
+      xhr.send(sender);
+      console.log(val)
     }
     $(document).ready(function () {
       $(".nav-tabs a").click(function () {

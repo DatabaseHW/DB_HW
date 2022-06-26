@@ -13,6 +13,9 @@ from model.user import User
 from model.product import Product
 from model.order import Order
 
+from datetime import datetime
+
+
 def order(Shop_Form, Product_Form, Order_Form, searchShops):
     # TODO: edit this file
     print("hahah order.py")
@@ -31,15 +34,19 @@ def order(Shop_Form, Product_Form, Order_Form, searchShops):
 
     # (uid, sid, status, start, shop_name, price, oid = None, end = "")
     # start time
-    start = "1"
-    # how to get shop name by sid?
+    now = datetime.now()
+    start_time = now.strftime("%H:%M:%S")
     shopName = Shop.query.filter_by(sid = order_sid).first().name
-    # price = request.args.get('calcPrice_total')
     price = Order_Form.calcPrice_total.data
+
+    print(type(start_time), start_time)
     print("[37] shop_name:", shopName)
     print("[38] price:", price)
-    new_order = Order(current_user.get_id(), order_sid, "Not Finish", start, shopName, price)
+    
+    new_order = Order(current_user.get_id(), order_sid, "Not Finish", start_time, shopName, price)
     print("order:", new_order)
+
+    # create item
 
     # add transcation
 

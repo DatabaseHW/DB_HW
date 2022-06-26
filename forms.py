@@ -67,4 +67,3 @@ class ModifyForm(FlaskForm):
     quantity_modify = IntegerField(u'數量',validators=[DataRequired(message=u'數量不可為空'), NumberRange(min=0, message="數量不可為負" )])
     price_modify = IntegerField(u'價格',validators=[DataRequired(message=u'價格不可為空'), NumberRange(min=0, message="價格不可為負" )])
     Modify_submit = SubmitField('Modify_submit')
-

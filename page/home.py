@@ -25,6 +25,8 @@ from page.Product_add import product_add
 from page.Product_delete import product_delete
 from page.Product_modify import product_modify
 
+from inspect import currentframe, getframeinfo
+
 from math import radians, cos, sin, asin, sqrt
 # import math
 
@@ -301,26 +303,28 @@ def home():
     elif Modify_Form.Modify_submit.data and Modify_Form.validate():
         return product_modify(Shop_Form, Product_Form, Modify_Form)
 
+    #search my order
     print("[304] status:", request.args.get('myOrderStatus'))
     searchMyOrder = Order.query.all()
     print("[306] searchMyOrder:", searchMyOrder)
-    
-    # i = 0
-    # while(i < len(searchMyOrder)):
-    #     if((searchMyOrder[i].uid != current_user.get_id())):
-    #         searchMyOrder.remove(searchMyOrder[i])
-    #         continue
-    #     i += 1
+    ## print current line number
+    # print(getframeinfo(currentframe()).lineno)
+    i = 0
+    while(i < len(searchMyOrder)):
+        if((searchMyOrder[i].uid != current_user.get_id())):
+            searchMyOrder.remove(searchMyOrder[i])
+            continue
+        i += 1
 
-    # status = request.args.get('status')
-    # print('status:', status)
-    # if status != "All":
-    #     i = 0
-    #     while(i < len(searchMyOrder)):
-    #         if((searchMyOrder[i].status != status)):
-    #             searchMyOrder.remove(searchMyOrder[i])
-    #             continue
-    #         i += 1
+    status = request.args.get('status')
+    print('status:', status)
+    if status != "All":
+        i = 0
+        while(i < len(searchMyOrder)):
+            if((searchMyOrder[i].status != status)):
+                searchMyOrder.remove(searchMyOrder[i])
+                continue
+            i += 1
     
     # done search my order
     # searchMyOrder.products = []
@@ -354,6 +358,28 @@ def myorder():
                             # searchShops = searchShops,
                             # shop_form = Shop_Form,
                             # product_form = Product_Form,
+                            user = User.query.filter_by(id=current_user.get_id()).first(), 
+                            has_shop=Shop.query.filter_by(uid=current_user.get_id())
+
+                        )
+
+
+
+@website.route('/get-status', methods = ['POST'])
+def getStatus():
+    information = request.data.decode()
+    print("get status: ", information)
+    Shop_Form = ShopForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
+    Product_Form = ProductForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
+    
+    # return "I don't know what to return. QAQ"
+    return render_template(
+                            "nav.html", 
+                            # old version is outerjoin in next line
+                            # shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                            # searchShops = searchShops,
+                            shop_form = Shop_Form,
+                            product_form = Product_Form,
                             user = User.query.filter_by(id=current_user.get_id()).first(), 
                             has_shop=Shop.query.filter_by(uid=current_user.get_id())
 

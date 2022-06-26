@@ -19,15 +19,23 @@ class User(user_database.Model, UserMixin):
     phonenumber = user_database.Column(user_database.String(10), unique = True)
     latitude = user_database.Column(user_database.Float)
     longitude = user_database.Column(user_database.Float)
+    balance = user_database.Column(user_database.Integer)
 
-    def __init__(self, account, passwd, name, phone = None, latitude = None, longitude = None):
-        self.id = bcrypt.generate_password_hash(account)
+    def __init__(self, account, passwd, name, phone = None, latitude = None, longitude = None, balance = 0, id = None, passwdHashed = False):
+        if id == None:
+            self.id = bcrypt.generate_password_hash(account)
+        else:
+            self.id = id
         self.name = name
         self.account = account
-        self.passwd_hash = bcrypt.generate_password_hash(passwd)
+        if (passwdHashed == False):
+            self.passwd_hash = bcrypt.generate_password_hash(passwd)
+        else:
+            self.passwd_hash = passwd
         self.phonenumber = phone
         self.latitude = latitude
         self.longitude = longitude
+        self.balance = balance
 
     def check_password(self,passwd):
         return bcrypt.check_password_hash(self.passwd_hash,passwd)

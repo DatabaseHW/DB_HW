@@ -22,6 +22,27 @@ class RegisterForm(FlaskForm):
     longitude = FloatField(u'精度',validators=[InputRequired(message=u'經度不可為空'), NumberRange(-180,180,message="格式錯誤"), DataRequired(message="格式錯誤")])
     submit = SubmitField('submit')
 
+class LocationForm(FlaskForm):
+    latitude_modify = FloatField(u'緯度',validators=[InputRequired(message=u'緯度不可為空'), NumberRange(-90,90,message="格式錯誤"), DataRequired(message="格式錯誤")])
+    longitude_modify = FloatField(u'精度',validators=[InputRequired(message=u'經度不可為空'), NumberRange(-180,180,message="格式錯誤"), DataRequired(message="格式錯誤")])
+    location_submit = SubmitField('location_submit')
+
+class RechargeForm(FlaskForm):
+    recharge_addvalue = IntegerField(u'addvalue',validators=[DataRequired(message=u'儲值不可為空'), NumberRange(min=0,message="儲值不可為負")])
+    recharge_submit = SubmitField('recharge_submit')
+
+# class OrderCalcPriceForm(FlaskForm):
+#     order_sid = StringField(u'order_sid')
+#     order_calc_price_submit = SubmitField('order_calc_price_submit')
+
+class OrderForm(FlaskForm):
+    order_sid = StringField(u'order_sid')
+    calcPrice_total = IntegerField('calcPrice_total')
+    order_submit = SubmitField('order_submit')
+
+class MyOrderForm(FlaskForm):
+    my_order_submit = StringField('status')
+
 class ShopForm(FlaskForm):
     name = StringField(u'名字',validators=[DataRequired(message=u'名字不可為空')])
     latitude = FloatField(u'緯度',validators=[InputRequired(message=u'緯度不可為空'), NumberRange(-90,90,message="格式錯誤"), DataRequired(message="格式錯誤")])
@@ -46,3 +67,4 @@ class ModifyForm(FlaskForm):
     quantity_modify = IntegerField(u'數量',validators=[DataRequired(message=u'數量不可為空'), NumberRange(min=0, message="數量不可為負" )])
     price_modify = IntegerField(u'價格',validators=[DataRequired(message=u'價格不可為空'), NumberRange(min=0, message="價格不可為負" )])
     Modify_submit = SubmitField('Modify_submit')
+

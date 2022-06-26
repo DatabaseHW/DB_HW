@@ -23,7 +23,7 @@ def shop_register(Shop_Form, Product_Form):
                                     has_shop=Shop.query.filter_by(uid=current_user.get_id())
                                 )
     else:
-        new_shop = Shop(current_user.get_id(), Shop_Form.name.data,Shop_Form.latitude.data,Shop_Form.longitude.data,Shop_Form.categorys.data)
+        new_shop = Shop(current_user.get_id(), Shop_Form.name.data, Shop_Form.latitude.data, Shop_Form.longitude.data, Shop_Form.categorys.data)
         user_database.session.add(new_shop)
         user_database.session.commit()
         flash("商店註冊成功",category="register success")

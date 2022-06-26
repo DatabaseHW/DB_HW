@@ -21,20 +21,23 @@ class Product(user_database.Model, UserMixin):
     price = user_database.Column(user_database.Integer)
     picture = user_database.Column(user_database.Text)
 
-    def __init__(self, sid, name, quantity, price, picture = None):
+    def __init__(self, sid, name, quantity, price, picture = None, pid = None):
         self.sid = sid
-        self.pid = bcrypt.generate_password_hash(name + sid)
+        if(pid == None):
+            self.pid = bcrypt.generate_password_hash(name + sid)
+        else:
+            self.pid = pid
         self.name = name
         self.quantity = quantity
         self.price = price
         self.picture = picture
     
-    @Login_manager.user_loader
-    def load_shop(user_id):
-        return User.query.get(user_id)
+    # @Login_manager.user_loader
+    # def load_shop(user_id):
+    #     return User.query.get(user_id)
 
     def __repr__(self):
-        return f'<User {self.name!r}>'
+        return f'<Product {self.name!r}>'
     
     def __str__(self):
-        return f'<User {self.name!r} ID {self.id!r}>'
+        return f'<Product {self.name!r} PID {self.pid!r}>'

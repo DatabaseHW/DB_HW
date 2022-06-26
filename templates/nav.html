@@ -32,35 +32,96 @@
 
     <ul class="nav nav-tabs">
       <li class="active"><a href="#home">Home</a></li>
-      <li><a href="#menu1">shop</a></li>
-
-
+      <li><a href="#shop">shop</a></li>
+      <li><a href="#myorder">MyOrder</a></li>
+      <!-- {% for _shop in has_shop %} -->
+      <li><a href="#shoporder">Shop Order</a></li>
+      <!-- {% endfor %} -->
+      <li><a href="#transactionrecord">Transaction Record</a></li>
     </ul>
 
     <div class="tab-content">
       <div id="home" class="tab-pane fade in active">
+        <!-- <div>
+          <h3>Example counter</h3>
+          <input class="result" id="exampleCnt" value=500 />
+          <button onClick="valInc()">Increase</button>
+          <button onClick="valDec()">Decrease</button>
+          <script>
+            let counterVal = document.getElementById("exampleCnt");
+            function valInc () {
+              counterVal.value = parseInt(counterVal.value) + 100;
+            }
+            function valDec () {
+              counterVal.value = parseInt(counterVal.value) - 100;
+            }
+          </script>
+        </div> -->
         <h3>Profile</h3>
         <div class="row">
           <div class="col-xs-10">
-            Accouont: sherry, user, PhoneNumber: 0912345678, walletbalance: 100
+            Accouont: {{ user.account }}, <br/>
+            PhoneNumber: {{ user.phonenumber }}, <br/>
+            location: {{ user.latitude }}, {{ user.longitude }}
+            <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#Modal-Location">Edit Location</button></td>
             <!-- Modal -->
-            <button type="button " style="margin-left: 5px;" class=" btn btn-info " data-toggle="modal"
-              data-target="#myModal">Add value</button>
-            <div class="modal fade" id="myModal"  data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog  modal-sm">
+            <div class="modal fade" id="Modal-Location" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add value</h4>
+                    <h4 class="modal-title" id="staticBackdropLabel">Edit Location</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
                   </div>
-                  <div class="modal-body">
-                    <input type="text" class="form-control" id="Meal" placeholder="enter add value">
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Add</button>
-                  </div>
+                  <form method="post">
+                    <div class="modal-body">
+                      <div class="row">
+                        <div class="col-xs-6">
+                          <label for="ex41">latitude</label>
+                          <input class="form-control" id="ex41" type="text" name="latitude_modify">
+                        </div>
+                        <div class="col-xs-6">
+                          <label for="ex41">longitude</label>
+                          <input class="form-control" id="ex41" type="text" name="longitude_modify">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <input type="submit" value="Edit" class="btn btn-secondary" name="location_submit">
+                    </div>
+                  </form>  
                 </div>
               </div>
+            </div>
+            walletbalance: {{ user.balance }}
+            <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#Modal-Recharge">Recharge</button></td>
+            <!-- Modal -->
+        
+            <div class="modal fade" id="Modal-Recharge" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="staticBackdropLabel">Recharge</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="post">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-xs-6">
+                                        <label for="ex41">Add Value</label>
+                                        <input class="form-control" id="ex41" type="text" name="recharge_addvalue">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" value="AddValue" class="btn btn-secondary" name="recharge_submit">
+                            </div>
+                        </form>  
+                    </div>
+                </div>
             </div>
           </div>
 
@@ -71,17 +132,16 @@
              -->
         <h3>Search</h3>
         <div class=" row  col-xs-8">
-          <form class="form-horizontal" action="/action_page.php">
+          <form class="form-horizontal" action="{{ url_for('home') }}">
             <div class="form-group">
               <label class="control-label col-sm-1" for="Shop">Shop</label>
               <div class="col-sm-5">
-                <input type="text" class="form-control" placeholder="Enter Shop name">
+                <input type="text" class="form-control" placeholder="Enter Shop name" name="shopname">
               </div>
               <label class="control-label col-sm-1" for="distance">distance</label>
               <div class="col-sm-5">
-
-
-                <select class="form-control" id="sel1">
+                <select class="form-control" id="sel1" name="distance">
+                  <option>not concerned</option>
                   <option>near</option>
                   <option>medium </option>
                   <option>far</option>
@@ -96,37 +156,37 @@
               <label class="control-label col-sm-1" for="Price">Price</label>
               <div class="col-sm-2">
 
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" name="priceL">
 
               </div>
               <label class="control-label col-sm-1" for="~">~</label>
               <div class="col-sm-2">
 
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" name="priceU">
 
               </div>
               <label class="control-label col-sm-1" for="Meal">Meal</label>
               <div class="col-sm-5">
-                <input type="text" list="Meals" class="form-control" id="Meal" placeholder="Enter Meal">
-                <datalist id="Meals">
-                  <option value="Hamburger">
-                  <option value="coffee">
-                </datalist>
+                <input type="text" list="Meals" class="form-control" id="Meal" placeholder="Enter Meal" name="meal">
+                <!-- <datalist id="Meals"> -->
+                  <!-- <option value="Hamburger"> -->
+                  <!-- <option value="coffee"> -->
+                <!-- </datalist> -->
               </div>
             </div>
 
             <div class="form-group">
-              <label class="control-label col-sm-1" for="category"> category</label>
+              <label class="control-label col-sm-1" for="category">category</label>
             
               
                 <div class="col-sm-5">
-                  <input type="text" list="categorys" class="form-control" id="category" placeholder="Enter shop category">
-                  <datalist id="categorys">
-                    <option value="fast food">
+                  <input type="text" list="categorys" class="form-control" id="category" placeholder="Enter shop category" name="category">
+                  <!-- <datalist id="category"> -->
+                    <!-- <option value="fast fffffood"> -->
                
-                  </datalist>
+                  <!-- </datalist> -->
                 </div>
-                <button type="submit" style="margin-left: 18px;"class="btn btn-primary">Search</button>
+                <button type="submit" style="margin-left: 18px;"class="btn btn-primary" name="search">Search</button>
               
             </div>
           </form>
@@ -145,96 +205,255 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
-               
-                  <td>macdonald</td>
-                  <td>fast food</td>
+                {% for searchShop in searchShops %}    
+                  <tr>
+                    <th scope="row">{{ searchShop.ID }}</th>
                 
-                  <td>near </td>
-                  <td>  <button type="button" class="btn btn-info " data-toggle="modal" data-target="#macdonald">Open menu</button></td>
-            
-                </tr>
-           
+                    <td>{{ searchShop.name }}</td>
+                    <td>{{ searchShop.categorys }}</td>
+                  
+                    <td>{{ searchShop.distance }}</td>
+                    <td>
+                      <button type="button" class="btn btn-info " data-toggle="modal" data-target="#openmenu{{ searchShop.ID }}">Open menu</button>
+                      <!-- Modal -->
+                      <div class="modal fade" id="openmenu{{ searchShop.ID }}" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        
+                          <!-- Modal content-->
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">{{ searchShop.name }} menu</h4>
+                            </div>
+                            <div class="modal-body">
+                              <!--  -->
+                              <div class="row">
+                                <div class=" col-xs-12">
+                                  <table class="table" style=" margin-top: 15px;">
+                                    <thead>
+                                      <tr>
+                                        <!-- <th scope="col">#</th> -->
+                                        <th scope="col">Picture</th>
+                                      
+                                        <th scope="col">meal name</th>
+                                    
+                                        <th scope="col">price</th>
+                                        <th scope="col">Quantity</th>
+                                      
+                                        <th scope="col">Order</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for product in searchShop.products %}
+                                        <tr>
+                                          <!-- <th scope="row">{{ product.ID }}</th> -->
+                                          <td>
+                                            {% if product.picture != '' %}
+                                              <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" with="50" heigh="10"><p>
+                                            {% endif %}
+                                          </td>
+                                          <td>{{ product.name }}</td>
+                                        
+                                          <td>{{ product.price }}</td>
+                                          <td>{{ product.quantity }}</td>
+                                      
+                                          <!-- <td> <input type="checkbox" id="cbox1" value="Hamburger"></td> -->
 
-              </tbody>
-            </table>
+                                          
+                                          <td>
+                                            <div>
+                                              <input class="form-control" id="productNum{{ product.pid }}" value=0 name="productNum{{ product.pid }}"/>
+                                              <p>productNum{{ product.pid }}</p>
+                                              <button onClick="valInc('{{ product.pid }}')">+</button>
+                                              <button onClick="valDec('{{ product.pid }}')">-</button>
+                                              <script>
+                                                function valInc (productPid) {
+                                                  let counterVal = document.getElementById("productNum" + productPid);
+                                                  counterVal.value = parseInt(counterVal.value) + 1;
+                                                  if(counterVal.value < 0)
+                                                    counterVal.value = 0;
+                                                }
+                                                function valDec (productPid) {
+                                                  let counterVal = document.getElementById("productNum" + productPid);
+                                                  counterVal.value = parseInt(counterVal.value) - 1;
+                                                  if(counterVal.value < 0)
+                                                    counterVal.value = 0;
+                                                }
+                                              </script>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      {% endfor %}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                
+                              </div>
+                              <!--  -->
+                            </div>
+                            <label class="control-label col-sm-1" for="delivery_type">Type</label>
+                            <div class="col-sm-5">
+                              <select class="form-control" id="delivery_type" name="delivery_type">
+                                <option>Delivery</option>
+                                <option>Pick-up</option>
+                              </select>
+                            </div>
+                            <form method="post">
+                              <div class="modal-footer">
+                                <input value="{{ searchShop.sid | safe }}" name="order_sid">
+                                <input type="button" value="Calculate Price" class="btn btn-info" data-toggle="modal" onClick="calcSubtotal();calcDeliveryFee();calcTotal()" data-target="#calcprice{{ searchShop.ID }}" name = "order_calc_price_submit">
+                                <!-- <input type="submit" value="Calculate Price" class="btn btn-info" data-toggle="modal" data-target="#calcprice{{ searchShop.ID }}" name = "order_calc_price_submit"> -->
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Modal -->
+                      <div class="modal fade" id="calcprice{{ searchShop.ID }}" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        
+                          <!-- Modal content-->
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Order</h4>
+                            </div>
+                            
+                            <form method="post">
+                              <div class="modal-body">
+                              <!--  -->
+                        
+                              <div class="row">
+                                <div class="  col-xs-12">
+                                  <table class="table" style=" margin-top: 15px;">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Picture</th>
+                                      
+                                        <th scope="col">meal name</th>
+                                    
+                                        <th scope="col">price</th>
+                                        <th scope="col">Order Quantity</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for _product in searchShop.products %}
+                                        <!-- <tr>
+                                          <th scope="row">{{ _product.ID }}</th>
+                                          <td>
+                                            {% if _product.picture != '' %}
+                                              <p><img src="data:image/jpeg;base64,{{ _product.picture | safe }}" with="50" heigh="10"><p>
+                                            {% endif %}
+                                          </td>
+                                          <td>{{ _product.name }}</td>
+                                        
+                                          <td>{{ _product.price }}</td>
+                                          <td>{{ _product.quantity }}</td>
+                                        </tr> -->
+                                        <!-- <input type="button" value="Calculate Price" class="btn btn-info" data-toggle="modal" onClick="calcSubtotal();calcDeliveryFee();calcTotal()" data-target="#calcprice{{ searchShop.ID }}" name = "order_calc_price_submit"> -->
+                                      {% endfor %}
+                                      <!-- add script here -->
+                                      <!-- show those product num > 0 -->
 
-                <!-- Modal -->
-  <div class="modal fade" id="macdonald"  data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">menu</h4>
-        </div>
-        <div class="modal-body">
-         <!--  -->
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                              
   
-         <div class="row">
-          <div class="  col-xs-12">
-            <table class="table" style=" margin-top: 15px;">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Picture</th>
-                 
-                  <th scope="col">meal name</th>
-               
-                  <th scope="col">price</th>
-                  <th scope="col">Quantity</th>
-                
-                  <th scope="col">Order check</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td><img src="Picture/1.jpg" with="50" heigh="10" alt="Hamburger"></td>
-                
-                  <td>Hamburger</td>
-                
-                  <td>80 </td>
-                  <td>20 </td>
-              
-                  <td> <input type="checkbox" id="cbox1" value="Hamburger"></td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td><img src="Picture/2.jpg" with="10" heigh="10" alt="coffee"></td>
-                 
-                  <td>coffee</td>
-             
-                  <td>50 </td>
-                  <td>20</td>
-              
-                  <td><input type="checkbox" id="cbox2" value="coffee"></td>
-                </tr>
+                              <!--  -->
+                              </div>
+                              <div class="modal-footer">
+                                <table class="table" style=" margin-top: 15px;">
+                                  <tbody>
+                                    <script>
+                                      function getAllNum() {
 
+
+                                        array.forEach(element => {
+                                          
+                                        });
+
+                                        // foreach
+                                        // foreach {
+                                        //   getNum();
+                                        // }
+                                      }
+                                    </script>
+                                    {% for _product in searchShop.products %}
+                                      <input value="{{ _product.pid }}" hidden=True/>
+                                        <script>
+                                          function getNum(productPid) {
+                                            var el = document.getElementById('content');
+                                            var num = document.getElementById("productNum" + productPid);
+                                            var content;
+                                            if  (num > 0) {
+                                              content = '<tr><td>{% if _product.picture != "" %}<p><img src="data:image/jpeg;base64,{{ _product.picture | safe }}" with="50" heigh="10"><p>{% endif %}</td><td>{{ _product.name }}</td><td>{{ _product.price }}</td><td>{{ _product.quantity }}</td></tr>';
+                                              }
+                                              else {
+                                                content = '';
+                                              }
+                                              el.insertAdjacentHTML('afterbegin', content);
+                                          }
+                                        </script>
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
+                                <h5>Subtotal: $<input class="form-control" id="calcPrice_subtotal" value=2 name="calcPrice_subtotal"/></h5>
+                                <h5>Delivery fee: $ <input class="form-control" id="calcPrice_deliveryFee" value="30" name="calcPrice_deliveryFee"/></h5>
+                                <h5>Total Price: $ <input class="form-control" id="calcPrice_total" value=100 name="calcPrice_total"/></h5>
+                                <input value="{{ searchShop.sid | safe }}" name="order_sid" hidden = True>
+                                <input value="{{ searchShop.deliveryFee | safe }}" id="deliveryFee_delivery" name="deliveryFee_delivery" hidden = True>
+                                <input type="submit" value="Order" class="btn btn-primary" name = "order_submit">
+                                <!-- <input type="submit" value="Order" class="btn btn-primary" name = "order_text"> -->
+                                <script>
+                                  
+                                  function calcDeliveryFee() {
+                                    let deliveryType = document.getElementById("delivery_type");
+                                    let deliveryFee_delivery = document.getElementById("deliveryFee_delivery");
+                                    let deliveryFee = document.getElementById("calcPrice_deliveryFee");
+                                    if(deliveryType.value === "Pick-up"){
+                                      deliveryFee.value = 0;
+                                    }
+                                    else{
+                                      deliveryFee.value = deliveryFee_delivery.value;
+                                    }
+                                  }
+                                  function calcTotal() {
+                                    let subtotal = document.getElementById("calcPrice_subtotal");
+                                    let deliveryFee = document.getElementById("calcPrice_deliveryFee");
+                                    let total = document.getElementById("calcPrice_total");
+                                    total.value = parseInt(subtotal.value) + parseInt(deliveryFee.value);
+                                  }
+                                  function calcSubtotal() {
+                                    let subtotal = document.getElementById("calcPrice_subtotal");
+                                    // let products = searchShop.products;
+                                    
+                                    subtotal.value = 0;
+                                    // for(product in products ){
+                                    //   let price = product.price;
+                                    //   let num = document.getElementById("productNum" + product.pid);
+                                    //   subtotal += parseInt(price.value) * parseInt(num.value);
+                                    // }
+                                  }
+                                </script>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>
 
         </div>
-        
-
-         <!--  -->
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Order</button>
-        </div>
       </div>
       
-    </div>
-  </div>
-          </div>
-
-        </div>
-      </div>
-      
-      <div id="menu1" class="tab-pane fade">
+      <div id="shop" class="tab-pane fade">
         <h3> Start a business </h3>
         {% with messages = get_flashed_messages(category_filter=["name_repeated"]) %}
             {% if messages %}
@@ -271,7 +490,7 @@
                         <div>{{ message }}</div>
                     {% endfor %}
                 {% endif %}
-                <input class="form-control" id="ex6" placeholder="121.00028167648875" type="text" name="latitude">
+                <input class="form-control" id="ex6" placeholder="24.78472733371133" type="text" name="latitude">
                 </div>
                 <div class="col-xs-2">
                 <label for="ex8">longitude</label>
@@ -280,7 +499,7 @@
                         <div>{{ message }}</div>
                     {% endfor %}
                 {% endif %}
-                <input class="form-control" id="ex8" placeholder="24.78472733371133" type="text" name="longitude">
+                <input class="form-control" id="ex8" placeholder="121.00028167648875" type="text" name="longitude">
                 </div>
             </div>
             </div>
@@ -430,14 +649,282 @@
 
       </div>
 
+      <div id="myorder" class="tab-pane fade">
+        
+        <h3>Search My order</h3>
+        <label class="control-label col-sm-1" for="status">status</label>
+        <form action="{{ url_for('myorder') }}">
+          <!-- need POST ? -->
+          <div class="col-sm-5">
+            <select class="form-control" id="mySel" name="myOrderStatus" onchange="refreshPage()">
+              <option value="0">All</option>
+              <option value="1">未完成</option>
+              <option value="2">已完成</option>
+              <option value="3">已取消</option>
+              <!-- selected -->
+            </select>
+          </div>
+        </form>
+        <div class="row">
+          <div class="  col-xs-8">
+            <table class="table" style=" margin-top: 15px;">
+              <thead>
+                <tr>
+                  <th scope="col">Order ID</th>
+                  <th scope="col">status</th>
+                  <th scope="col">Start</th>
+                  <th scope="col">End</th>
+                  <th scope="col">Shop name</th>
+                  <th scope="col">Total Price</th>
+                  <th scope="col">Order Details</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for searchMyOrder in searchMyOrders %}    
+                  <tr>
+                    <th scope="row">{{ searchMyOrder.ID }}</th>
+                    <td>{{ searchMyOrder.status }}</td>
+                    <td>{{ searchMyOrder.timeStart }}</td>
+                    <td>{{ searchMyOrder.timeEnd }}</td>
+                    <td>{{ searchMyOrder.shopName}}</td>
+                    <td>{{ searchMyOrder.price }}</td>
+                    <td>
+                      <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail">Order Details</button>
+                      <!-- Modal -->
+                      <div class="modal fade" id="orderdetail" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        
+                          <!-- Modal content-->
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Order Detail</h4>
+                            </div>
+                            <div class="modal-body">
+                            <!--  -->
+                      
+                            <div class="row">
+                              <div class="  col-xs-12">
+                                <table class="table" style=" margin-top: 15px;">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Picture</th>
+                                    
+                                      <th scope="col">meal name</th>
+                                  
+                                      <th scope="col">price</th>
+                                      <th scope="col">Order Quantity</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {% for product in searchMyOrder.products %}
+                                      <tr>
+                                        <td>
+                                          {% if product.picture != '' %}
+                                            <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" with="50" heigh="10"><p>
+                                          {% endif %}
+                                        </td>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ product.price }}</td>
+                                        <td>{{ product.quantity }}</td>
+                                      </tr>
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
+                              </div>
 
+                            </div>
+                            
 
+                            <!--  -->
+                            </div>
+                            <div class="modal-footer">
+                              Total Price { searchMyOrder.price }}
+                            </div>
+                          </div>
+                          
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <form method="post">
+                        <input value="{{ searchMyOrder.oid | safe}}" name = "searchMyOrder_oid" hidden = True>
+                        <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <div id="shoporder" class="tab-pane fade">
+        {% for _shop in has_shop %}
+          <h3>Search {{ _shop.name }} order</h3>
+          <input value="{{ _shop.sid }}" name="shopid" hidden=True/>
+          <label class="control-label col-sm-1" for="status">status</label>
+          <div class="col-sm-5">
+            <select class="form-control" id="sel1" name="status">
+              <option>All</option>
+              <option>未完成</option>
+              <option>已完成</option>
+              <option>已取消</option>
+            </select>
+          </div>
+          <div class="row">
+            <div class="  col-xs-8">
+              <table class="table" style=" margin-top: 15px;">
+                <thead>
+                  <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">status</th>
+                    <th scope="col">Start</th>
+                    <th scope="col">End</th>
+                    <th scope="col">Shop name</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">Order Details</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for searchShopOrder in searchShopOrders %}    
+                    <tr>
+                      <th scope="row">{{ searchShopOrder.ID }}</th>
+                      <td>{{ searchShopOrder.status }}</td>
+                      <td>{{ searchShopOrder.timeStart }}</td>
+                      <td>{{ searchShopOrder.timeEnd }}</td>
+                      <td>{{ searchShopOrder.shopName}}</td>
+                      <td>{{ searchShopOrder.price }}</td>
+                      <td>
+                        <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail">Order Details</button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="orderdetail" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                          
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Order Detail</h4>
+                              </div>
+                              <div class="modal-body">
+                              <!--  -->
+                        
+                              <div class="row">
+                                <div class="  col-xs-12">
+                                  <table class="table" style=" margin-top: 15px;">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Picture</th>
+                                      
+                                        <th scope="col">meal name</th>
+                                    
+                                        <th scope="col">price</th>
+                                        <th scope="col">Order Quantity</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for product in searchShopOrder.products %}
+                                        <tr>
+                                          <td>
+                                            {% if product.picture != '' %}
+                                              <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" with="50" heigh="10"><p>
+                                            {% endif %}
+                                          </td>
+                                          <td>{{ product.name }}</td>
+                                          <td>{{ product.price }}</td>
+                                          <td>{{ product.quantity }}</td>
+                                        </tr>
+                                      {% endfor %}
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                              </div>
+                              
+
+                              <!--  -->
+                              </div>
+                              <div class="modal-footer">
+                                Total Price { searchShopOrder.price }}
+                              </div>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <form method="post">
+                          <input value="{{ searchShopOrder.oid | safe}}" name = "searchShopOrder_oid" hidden = True>
+                          <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
+                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                        </form>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        {% endfor %}
+      </div>
+
+      <div id="transactionrecord" class="tab-pane fade">
+        <h3>Search transaction record</h3>
+        <label class="control-label col-sm-1" for="action">Action</label>
+        <div class="col-sm-5">
+          <select class="form-control" id="sel1" name="action">
+            <option>All</option>
+            <option>Payment</option>
+            <option>Receive</option>
+            <option>Recharge</option>
+          </select>
+        </div>
+        <div class="row">
+          <div class="  col-xs-8">
+            <table class="table" style=" margin-top: 15px;">
+              <thead>
+                <tr>
+                  <th scope="col">Record ID</th>
+                  <th scope="col">Action</th>
+                  <th scope="col">Time</th>
+                  <th scope="col">Trader</th>
+                  <th scope="col">Amount Change</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for searchTransactionRecord in searchTransactionRecords %}    
+                  <tr>
+                    <th scope="row">{{ searchTransactionRecord.ID }}</th>
+                    <td>{{ searchTransactionRecord.status }}</td>
+                    <td>{{ searchTransactionRecord.timeStart }}</td>
+                    <td>{{ searchTransactionRecord.timeEnd }}</td>
+                    <td>{{ searchTransactionRecord.shopName}}</td>
+                    <td>{{ searchTransactionRecord.price }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Option 1: Bootstrap Bundle with Popper -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script> -->
   <script>
+    function init(){
+      document.getElementById('sel1').onchange=function(){subm(myOrderStatus)}
+    }
+    function refreshPage(){
+      window.location.reload();
+    }
     $(document).ready(function () {
       $(".nav-tabs a").click(function () {
         $(this).tab('show');

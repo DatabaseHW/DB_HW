@@ -22,7 +22,7 @@ class Transaction(user_database.Model, UserMixin):
     tid = user_database.Column(user_database.String(256), primary_key = True)
     action = user_database.Column(user_database.String(256))
     trans_time = user_database.Column(user_database.String(256))
-    trader_id = user_database.Column(user_database.String(256))
+    trader = user_database.Column(user_database.String(256))
     change = user_database.Column(user_database.Integer)
 
     def __init__(self, action, trans_time, trader_id, change, tid = None): # TODO

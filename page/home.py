@@ -25,6 +25,9 @@ from page.shop_register import shop_register
 from page.Product_add import product_add
 from page.Product_delete import product_delete
 from page.Product_modify import product_modify
+from page.cancelmyorder import cancelmyorder
+from page.cancelshoporder import cancelshoporder
+from page.doneshoporder import doneshoporder
 
 from inspect import currentframe, getframeinfo
 
@@ -124,13 +127,12 @@ def searchmyorder(status):
     all_items = Item.query.all()
     for i in range(len(searchMyOrder)):
         for y in all_items:
-            print("[127] oid:", searchMyOrder[i].oid, y.oid)
             if searchMyOrder[i].oid == y.oid:
-                print("[128]")
                 prod = Product.query.filter_by(pid=y.pid).first()
                 print("[129] prod:", type(prod), prod)
                 new_product = Product(prod.sid, prod.name, y.quantity, prod.price, prod.picture, prod.pid)
                 searchMyOrder[i].products.append(new_product)
+        print("[135] searchMyOrder[", i, "].products:", searchMyOrder[i].products)
 
     return searchMyOrder
 
@@ -280,6 +282,9 @@ def homee(myOrderStatus=0):
     # searchMyOrders=
     # OrderCalcPrice_Form = OrderCalcPriceForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     # MyOrder_Form = MyOrderForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
+    CancelMyOrder_Form = CancelMyOrderForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
+    CancelShopOrder_Form = CancelShopOrderForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
+    DoneShopOrder_Form = DoneShopOrderForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     Order_Form = OrderForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     Location_Form = LocationForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     Recharge_Form = RechargeForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
@@ -293,13 +298,20 @@ def homee(myOrderStatus=0):
     # print("order_sid:", OrderCalcPrice_Form.order_sid.data)
     # print("order_calc_price_submit:", OrderCalcPrice_Form.order_calc_price_submit.data)
     # print("Order_Form.order_submit:", Order_Form.order_submit.data)
-
-    # if OrderCalcPrice_Form.order_calc_price_submit.data and OrderCalcPrice_Form.validate():
-        # return orderCalcPrice(Shop_Form, Product_Form, searchShops, OrderCalcPrice_Form)
+    
+    print("CancelMyOrder_Form.searchMyOrder_Cancel_submit:", CancelMyOrder_Form.searchMyOrder_Cancel_submit.data)
+    print("CancelShopOrder_Form.searchShopOrder_Cancel_submit:", CancelShopOrder_Form.searchShopOrder_Cancel_submit.data)
+    print("DoneShopOrder_Form.searchShopOrder_Done_submit:", DoneShopOrder_Form.searchShopOrder_Done_submit.data)
 
     # if MyOrder_Form.my_order_submit.data:
     #     return myorder(Shop_Form, Product_Form, MyOrder_Form, searchShops)
-    if Order_Form.order_submit.data and Order_Form.validate():
+    if CancelMyOrder_Form.searchMyOrder_Cancel_submit.data and CancelMyOrder_Form.validate():
+        return cancelmyorder(Shop_Form, Product_Form, CancelMyOrder_Form, searchShops)
+    elif CancelShopOrder_Form.searchShopOrder_Cancel_submit.data and CancelShopOrder_Form.validate():
+        return cancelshoporder(Shop_Form, Product_Form, CancelShopOrder_Form, searchShops)
+    elif DoneShopOrder_Form.searchShopOrder_Done_submit.data and DoneShopOrder_Form.validate():
+        return doneshoporder(Shop_Form, Product_Form, DoneShopOrder_Form, searchShops)
+    elif Order_Form.order_submit.data and Order_Form.validate():
         return order(Shop_Form, Product_Form, Order_Form, searchShops)
     elif Location_Form.location_submit.data and Location_Form.validate():
         return location_modify(Shop_Form, Product_Form, Location_Form, searchShops)

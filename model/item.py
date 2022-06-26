@@ -27,7 +27,7 @@ class Item(user_database.Model, UserMixin):
 
     def __init__(self, oid, pid, quantity, price, iid = None):
         if(iid == None):
-            self.iid = bcrypt.generate_password_hash(oid + pid + quantity)
+            self.iid = bcrypt.generate_password_hash(oid + pid)
         else:
             self.iid = iid
         self.oid = oid

@@ -44,12 +44,15 @@ class OrderForm(FlaskForm):
 #     my_order_submit = StringField('status')
 
 class CancelMyOrderForm(FlaskForm):
+    searchMyOrder_oid = StringField('searchMyOrder_oid')
     searchMyOrder_Cancel_submit = StringField('searchMyOrder_Cancel_submit')
 
 class CancelShopOrderForm(FlaskForm):
+    searchShopOrder_oid = StringField('searchShopOrder_oid')
     searchShopOrder_Cancel_submit = StringField('searchShopOrder_Cancel_submit')
 
 class DoneShopOrderForm(FlaskForm):
+    searchShopOrder_oid = StringField('searchShopOrder_oid')
     searchShopOrder_Done_submit = StringField('searchShopOrder_Done_submit')
 
 class ShopForm(FlaskForm):

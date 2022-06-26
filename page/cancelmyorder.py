@@ -11,25 +11,31 @@ from forms import RechargeForm
 from model.shop import Shop
 from model.user import User
 from model.product import Product
+from model.order import Order
 from model.transaction import Transaction
 
 from datetime import datetime, date
 
-def recharge(Shop_Form, Product_Form, Recharge_Form, searchShops):
+def cancelmyorder(Shop_Form, Product_Form, CancelMyOrder_Form, searchShops):
     # TODO: edit this file
-    delete_user = User.query.filter_by(id = current_user.get_id()).first()
-    # print("Recharge_Form.recharge_addvalue", vars(Recharge_Form.recharge_addvalue))
-    new_balance = Recharge_Form.recharge_addvalue.data + delete_user.balance
-    new_user = User(delete_user.account, delete_user.passwd_hash, delete_user.name, delete_user.phonenumber, delete_user.latitude, delete_user.longitude, new_balance, delete_user.id, passwdHashed = True)
-
-    user_database.session.delete(delete_user)
-    user_database.session.add(new_user)
-    user_database.session.commit()
 
     # add transcation
-    start_time = str(date.today()) + ' ' + datetime.now().strftime("%H:%M:%S")
-    new_transaction = Transaction("Recharge", start_time, str(new_user.id), str(Recharge_Form.recharge_addvalue.data))
-    user_database.session.add(new_transaction)
+    order_id = CancelMyOrder_Form.searchMyOrder_oid.data
+    print("[23] oid:", order_id)
+    uid = current_user.get_id()
+    order_sid = Order.query.filter_by(oid = order_id).first().sid
+    total_price = Order.query.filter_by(oid = order_id).first().price
+    end_time = str(date.today()) + ' ' + datetime.now().strftime("%H:%M:%S")
+
+    print("total_price:", total_price)
+
+    # set status to cancelled, set end_time
+    delete_order = Order.query.filter_by(oid = order_id).first()
+    new_order = Order(uid, order_sid, "Cancelled", delete_order.start, delete_order.shop_name, total_price, delete_order.oid, end_time)
+    print("[35] delete_order:", delete_order)
+    print("[36] new_order:", new_order)
+    user_database.session.delete(delete_order)
+    user_database.session.add(new_order)
     user_database.session.commit()
 
     # TODO error message: can not be float

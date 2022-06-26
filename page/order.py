@@ -54,25 +54,32 @@ def order(Shop_Form, Product_Form, Order_Form, searchShops):
     shopName = Shop.query.filter_by(sid = order_sid).first().name
     total_price = Order_Form.calcPrice_total.data
 
-    print("[41] start time:", type(start_time), start_time)
-    print("[42] shop_name:", shopName)
-    print("[43] price:", total_price)
+    # print("[41] start time:", type(start_time), start_time)
+    # print("[42] shop_name:", shopName)
+    # print("[43] price:", total_price)
     
     new_order = Order(uid, order_sid, "Not Finish", start_time, shopName, total_price)
-    print("order:", new_order)
-
     user_database.session.add(new_order)
+    user_database.session.commit()
 
     # create item(oid, pid, quantity, price, iid = None)
     print("[49] orderProducts:", orderProducts)
     for x in orderProducts:
         # new_item = Item(new_order.oid, x.pid, x.quantity, x.quantity * x.price)
-        new_item = Item(new_order.oid, x.pid, 10, x.price) # quantity is none, because product is none
+        # print(type(new_order.oid), type(x.pid))
+        new_item = Item(str(new_order.oid), x.pid, 10, x.price) # quantity is none, because product is none
         user_database.session.add(new_item)
 
+        delete_product = Product.query.filter_by(pid = x.pid).first()
+        # new_product = Product(x.sid, x.name, delete_product.quantity - x.quantity, x.price, x.picture, x.pid)
+        new_product = Product(x.sid, x.name, delete_product.quantity - 1, x.price, x.picture, x.pid) # quantity is none, because product is none 
+        user_database.session.delete(delete_product)
+        user_database.session.add(new_product)
+        
+        user_database.session.commit()
+
+
     # edit product quantity
-    # delete_product = 
-    # new_product = 
 
     # add transaction
     # (self, action, trans_time, trader_id, change, tid = None)
@@ -82,7 +89,7 @@ def order(Shop_Form, Product_Form, Order_Form, searchShops):
     # user_database.session.add(new_transaction1)
     # user_database.session.add(new_transaction2)
     
-    user_database.session.commit()
+    # user_database.session.commit()
     return render_template(
                             "nav.html", 
                             user = User.query.filter_by(id=current_user.get_id()).first(), 

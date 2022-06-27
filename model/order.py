@@ -44,3 +44,6 @@ class Order(user_database.Model, UserMixin):
     
     def __str__(self):
         return f'<Order {self.oid!r}>'
+
+    def get_id(self):
+        return self.oid

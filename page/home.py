@@ -101,9 +101,6 @@ def haversine(lon1, lat1, lon2, lat2):
 
 def searchmyorder(status):
     searchMyOrder = Order.query.all()
-    # print("[304] status:", request.args.get('myOrderStatus'))
-    # print("[100] searchMyOrder:", searchMyOrder)
-    # print(getframeinfo(currentframe()).lineno)
     
     i = 0
     while(i < len(searchMyOrder)):
@@ -112,58 +109,105 @@ def searchmyorder(status):
             continue
         i += 1
 
-    if status != 0:
+    if status == 1: # Not Finish
         i = 0
         while(i < len(searchMyOrder)):
-            if((searchMyOrder[i].status != status)):
+            if((searchMyOrder[i].status != "Not Finish")):
+                searchMyOrder.remove(searchMyOrder[i])
+                continue
+            i += 1
+    elif status == 2: # Finished
+        i = 0
+        while(i < len(searchMyOrder)):
+            if((searchMyOrder[i].status != "Finished")):
+                searchMyOrder.remove(searchMyOrder[i])
+                continue
+            i += 1
+    elif status == 3: # Cancelled
+        i = 0
+        while(i < len(searchMyOrder)):
+            if((searchMyOrder[i].status != "Cancelled")):
                 searchMyOrder.remove(searchMyOrder[i])
                 continue
             i += 1
     
-    # go through item, check for the order in searchMyOrder list
-    for i in range(len(searchMyOrder)):
-        searchMyOrder[i].products = []
-    
     all_items = Item.query.all()
     for i in range(len(searchMyOrder)):
+        searchMyOrder[i].products = []
         for y in all_items:
             if searchMyOrder[i].oid == y.oid:
                 prod = Product.query.filter_by(pid=y.pid).first()
-                print("[129] prod:", type(prod), prod)
+                # print("[129] prod:", type(prod), prod)
                 new_product = Product(prod.sid, prod.name, y.quantity, prod.price, prod.picture, prod.pid)
                 searchMyOrder[i].products.append(new_product)
-        print("[135] searchMyOrder[", i, "].products:", searchMyOrder[i].products)
+                print("[135] searchMyOrder[", i, "].products:", searchMyOrder[i].products)
+
+    for _ in range(len(searchMyOrder)):
+        # print("[191] vars:", vars(searchShops[_]))
+        searchMyOrder[_].ID = _ + 1
 
     return searchMyOrder
 
 
-def searchshoporder():
+def searchshoporder(status):
     searchShopOrder = Order.query.all()
     sid = request.args.get('shopid')
+    print("[158] sid:", sid)
     
     i = 0
     while(i < len(searchShopOrder)):
-        if((searchShopOrder[i].sid != sid)):
+        if((searchShopOrder[i].uid != sid)):
             searchShopOrder.remove(searchShopOrder[i])
             continue
         i += 1
 
-    status = request.args.get('status')
-    if status != "All":
+    if status == 1: # Not Finish
         i = 0
         while(i < len(searchShopOrder)):
-            if((searchShopOrder[i].status != status)):
+            if((searchShopOrder[i].status != "Not Finish")):
+                searchShopOrder.remove(searchShopOrder[i])
+                continue
+            i += 1
+    elif status == 2: # Finished
+        i = 0
+        while(i < len(searchShopOrder)):
+            if((searchShopOrder[i].status != "Finished")):
+                searchShopOrder.remove(searchShopOrder[i])
+                continue
+            i += 1
+    elif status == 3: # Cancelled
+        i = 0
+        while(i < len(searchShopOrder)):
+            if((searchShopOrder[i].status != "Cancelled")):
                 searchShopOrder.remove(searchShopOrder[i])
                 continue
             i += 1
     
-    # done search shop order
+    all_items = Item.query.all()
+    for i in range(len(searchShopOrder)):
+        searchShopOrder[i].products = []
+        for y in all_items:
+            if searchShopOrder[i].oid == y.oid:
+                prod = Product.query.filter_by(pid=y.pid).first()
+                new_product = Product(prod.sid, prod.name, y.quantity, prod.price, prod.picture, prod.pid)
+                searchShopOrder[i].products.append(new_product)
+                print("[135] searchShopOrder[", i, "].products:", searchShopOrder[i].products)
+
+    for _ in range(len(searchShopOrder)):
+        # print("[191] vars:", vars(searchShops[_]))
+        searchShopOrder[_].ID = _ + 1
+
+    # for x in searchShopOrder:
+    #     print(x.products)
+    # print("---------------------------------------")
+    return searchShopOrder
+    
 
 
 @website.route('/<int:myOrderStatus>', methods = ['GET','POST'])
 @login_required
-def homee(myOrderStatus=0):
-    print(myOrderStatus)
+def homee(myOrderStatus=3):
+    print("-------------- Status: ",myOrderStatus)
     db__ = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='dbproject', charset='utf8')
     cur = db__.cursor()
     # if request.args.get('shopname') == "" and request.args.get('category') == "" :
@@ -279,7 +323,6 @@ def homee(myOrderStatus=0):
             # print("deliveryFee:", searchShops[_].deliveryFee)
 
     # my order list
-    # searchMyOrders=
     # OrderCalcPrice_Form = OrderCalcPriceForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     # MyOrder_Form = MyOrderForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     CancelMyOrder_Form = CancelMyOrderForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
@@ -305,6 +348,10 @@ def homee(myOrderStatus=0):
 
     # if MyOrder_Form.my_order_submit.data:
     #     return myorder(Shop_Form, Product_Form, MyOrder_Form, searchShops)
+    # print("[308] Recharge_Form.recharge_addvalue:", Recharge_Form.recharge_addvalue)
+    # print("[309] Order_Form.productNum:", Order_Form.productNum)
+    # print("[310] Recharge_Form.recharge_submit.data:", Recharge_Form.recharge_submit.data)
+
     if CancelMyOrder_Form.searchMyOrder_Cancel_submit.data and CancelMyOrder_Form.validate():
         return cancelmyorder(Shop_Form, Product_Form, CancelMyOrder_Form, searchShops)
     elif CancelShopOrder_Form.searchShopOrder_Cancel_submit.data and CancelShopOrder_Form.validate():
@@ -327,7 +374,11 @@ def homee(myOrderStatus=0):
         return product_modify(Shop_Form, Product_Form, Modify_Form)
 
     #search my order
-    searchMyOrder = searchmyorder(myOrderStatus)
+    searchMyOrders = searchmyorder(myOrderStatus)
+    searchShopOrders = searchshoporder(myOrderStatus)
+    # print("[352] searchMyOrders", searchMyOrders)
+    # for x in searchMyOrders:
+    #     print(x.products)
     
     return render_template(
                             "nav.html", 
@@ -339,13 +390,14 @@ def homee(myOrderStatus=0):
                             user = User.query.filter_by(id=current_user.get_id()).first(), 
                             has_shop=Shop.query.filter_by(uid=current_user.get_id()),
                             # searchMyOrders = [Order("1","1","1","1","1","1","1","1")]
-                            searchMyOrders = searchMyOrder
+                            searchMyOrders = searchMyOrders, 
+                            searchShopOrders = searchShopOrders
                         )
 
 @website.route('/', methods = ['GET','POST'])
 @login_required
 def home():
-    return homee(0)
+    return homee(3)
 
 
 @website.route('/#myorder', methods = ['GET','POST'])
@@ -367,14 +419,13 @@ def myorder():
                             searchMyOrders = [Order("1","1","1","1","1","1","1","1")]
                         )
 
-
-
 @website.route('/get-status', methods = ['POST'])
 def getStatus():
     information = request.data.decode()
-    print("get status: ", information)
-    Shop_Form = ShopForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
-    Product_Form = ProductForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
+    # Shop_Form = ShopForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
+    # Product_Form = ProductForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     
-    searchMyOrder = Order.query.all()
-    return "I don't know what to return. QAQ"
+    # searchMyOrder = Order.query.all()
+    print("status info",information)
+    return "a"
+    # return redirect('http://tonych.me:3450#myorder?status='+str(information))

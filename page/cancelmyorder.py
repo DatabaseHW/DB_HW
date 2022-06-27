@@ -12,6 +12,7 @@ from model.shop import Shop
 from model.user import User
 from model.product import Product
 from model.order import Order
+from model.item import Item
 from model.transaction import Transaction
 
 from datetime import datetime, date
@@ -37,6 +38,18 @@ def cancelmyorder(Shop_Form, Product_Form, CancelMyOrder_Form, searchShops):
     user_database.session.delete(delete_order)
     user_database.session.add(new_order)
     user_database.session.commit()
+
+    # add product quantity
+    all_product = Product.query.all()
+    all_item = Item.query.all()
+    for x in all_product:
+        for y in all_item:
+            if x.pid == y.pid:
+                delete_product = Product.query.filter_by(pid = x.pid).first()
+                new_product = Product(x.sid, x.name, x.quantity + y.quantity, x.price, x.picture, x.pid)
+                user_database.session.delete(delete_product)
+                user_database.session.add(new_product)
+                user_database.session.commit()
 
     # TODO error message: can not be float
     flash("加值成功",category="recharge success")

@@ -25,14 +25,14 @@ class Transaction(user_database.Model, UserMixin):
     trader = user_database.Column(user_database.String(256))
     change = user_database.Column(user_database.Integer)
 
-    def __init__(self, action, trans_time, trader_id, change, tid = None): # TODO
+    def __init__(self, action, trans_time, trader, change, tid = None): # TODO
         if(tid == None):
-            self.tid = bcrypt.generate_password_hash(action + trans_time + trader_id + change)
+            self.tid = bcrypt.generate_password_hash(action + trans_time + trader + str(change))
         else:
             self.tid = tid
         self.action = action
         self.trans_time = trans_time
-        self.trader_id = trader_id
+        self.trader_id = trader
         self.change = change
 
     def __repr__(self):

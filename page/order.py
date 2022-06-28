@@ -47,6 +47,7 @@ def order(Shop_Form, Product_Form, Order_Form, searchShops):
             # except ValueError:
             #     flash("商品數量非正整數或零",category="order_product_not_pos_int")
             
+            
             # if int(Order_Form.calcPrice_total.data) > User.query.filter_by(id = current_user.get_id()).first().balance:
             #     flash("訂購金額 > 餘額",category="order_product_not_enough_money")
             
@@ -55,7 +56,6 @@ def order(Shop_Form, Product_Form, Order_Form, searchShops):
             # if productNum > x.quantity: # productNum is None, so error
             #     flash("商品數量不足",category="order_product_not_enough")
 
-            # flash("訂購成功",category="order_product_success")
             # return render_template(
             #                         "nav.html", 
             #                         user = User.query.filter_by(id=current_user.get_id()).first(), 
@@ -96,24 +96,16 @@ def order(Shop_Form, Product_Form, Order_Form, searchShops):
         user_database.session.add(new_product)
         user_database.session.commit()
 
-    # minus product quantity
-    # all_product = Product.query.all()
-    # all_item = Item.query.all()
-    # for x in all_product:
-    #     for y in all_item:
-    #         if x.pid == y.pid:
-    #             delete_product = Product.query.filter_by(pid = x.pid).first()
-    #             new_product = Product(x.sid, x.name, x.quantity - y.quantity, x.price, x.picture, x.pid)
-    #             user_database.session.delete(delete_product)
-    #             user_database.session.add(new_product)
-    #             user_database.session.commit()
-
     # add transaction
-    # new_transaction1 = Transaction("Payment", start_time, order_sid, total_price)
-    # new_transaction2 = Transaction("Receive", start_time, uid, total_price)
-    # user_database.session.add(new_transaction1)
-    # user_database.session.add(new_transaction2)
+    sname = Shop.query.filter_by(sid = order_sid).first().name
+    uname = User.query.filter_by(id = current_user.get_id()).first().name
+    new_transaction1 = Transaction("Payment", start_time, sname, total_price)
+    new_transaction2 = Transaction("Receive", start_time, uname, total_price)
+    user_database.session.add(new_transaction1)
+    user_database.session.add(new_transaction2)
+    user_database.session.commit()
     
+    flash("訂購成功",category="order_product_success")
     return render_template(
                             "nav.html", 
                             user = User.query.filter_by(id=current_user.get_id()).first(), 

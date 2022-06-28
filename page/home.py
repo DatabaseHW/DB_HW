@@ -101,35 +101,12 @@ def haversine(lon1, lat1, lon2, lat2):
 
 def searchmyorder(status):
     searchMyOrder = Order.query.all()
-    
     i = 0
     while(i < len(searchMyOrder)):
         if((searchMyOrder[i].uid != current_user.get_id())):
             searchMyOrder.remove(searchMyOrder[i])
             continue
         i += 1
-
-    if status == 1: # Not Finish
-        i = 0
-        while(i < len(searchMyOrder)):
-            if((searchMyOrder[i].status != "Not Finish")):
-                searchMyOrder.remove(searchMyOrder[i])
-                continue
-            i += 1
-    elif status == 2: # Finished
-        i = 0
-        while(i < len(searchMyOrder)):
-            if((searchMyOrder[i].status != "Finished")):
-                searchMyOrder.remove(searchMyOrder[i])
-                continue
-            i += 1
-    elif status == 3: # Cancelled
-        i = 0
-        while(i < len(searchMyOrder)):
-            if((searchMyOrder[i].status != "Cancelled")):
-                searchMyOrder.remove(searchMyOrder[i])
-                continue
-            i += 1
     
     all_items = Item.query.all()
     for i in range(len(searchMyOrder)):
@@ -137,16 +114,59 @@ def searchmyorder(status):
         for y in all_items:
             if searchMyOrder[i].oid == y.oid:
                 prod = Product.query.filter_by(pid=y.pid).first()
-                # print("[129] prod:", type(prod), prod)
                 new_product = Product(prod.sid, prod.name, y.quantity, prod.price, prod.picture, prod.pid)
                 searchMyOrder[i].products.append(new_product)
                 # print("[135] searchMyOrder[", i, "].products:", searchMyOrder[i].products)
 
-    for _ in range(len(searchMyOrder)):
-        # print("[191] vars:", vars(searchShops[_]))
-        searchMyOrder[_].ID = _ + 1
 
-    return searchMyOrder
+    searchMyOrder0 = []
+    searchMyOrder1 = []
+    searchMyOrder2 = []
+    searchMyOrder3 = []
+    for x in searchMyOrder:
+        searchMyOrder0.append(x)
+        searchMyOrder1.append(x)
+        searchMyOrder2.append(x)
+        searchMyOrder3.append(x)
+
+    # print(searchMyOrder0)
+
+    # if status == 1: # Not Finish
+    i = 0
+    while(i < len(searchMyOrder1)):
+        if((searchMyOrder1[i].status != "Not Finish")):
+            searchMyOrder1.remove(searchMyOrder1[i])
+            continue
+        i += 1
+    # elif status == 2: # Finished
+    i = 0
+    while(i < len(searchMyOrder2)):
+        if((searchMyOrder2[i].status != "Finished")):
+            searchMyOrder2.remove(searchMyOrder2[i])
+            continue
+        i += 1
+    # elif status == 3: # Cancelled
+    i = 0
+    while(i < len(searchMyOrder3)):
+        if((searchMyOrder3[i].status != "Cancelled")):
+            searchMyOrder3.remove(searchMyOrder3[i])
+            continue
+        i += 1
+    
+    # print("[147] num of searcMyOrder:", len(searchMyOrder))
+    # print("[148] status:", type(status), status)
+    
+    for _ in range(len(searchMyOrder0)):
+        searchMyOrder0[_].ID = _ + 1
+    for _ in range(len(searchMyOrder1)):
+        searchMyOrder1[_].ID = _ + 1
+    for _ in range(len(searchMyOrder2)):
+        searchMyOrder2[_].ID = _ + 1
+    for _ in range(len(searchMyOrder3)):
+        searchMyOrder3[_].ID = _ + 1
+
+    print(len(searchMyOrder0), len(searchMyOrder1), len(searchMyOrder2), len(searchMyOrder3))
+    return searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3
 
 
 def searchshoporder(status):
@@ -208,6 +228,10 @@ def searchshoporder(status):
 @login_required
 def homee(status=3):
     print("homee called Status: ",type(status),status)
+    try:
+        status = int(status)
+    except:
+        status = int(status[1])
     db__ = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='dbproject', charset='utf8')
     cur = db__.cursor()
     # if request.args.get('shopname') == "" and request.args.get('category') == "" :
@@ -374,7 +398,7 @@ def homee(status=3):
         return product_modify(Shop_Form, Product_Form, Modify_Form)
 
     #search my order
-    searchMyOrders = searchmyorder(status)
+    searchMyOrder0, searchMyOrder2, searchMyOrder1, searchMyOrder3 = searchmyorder(status)
     searchShopOrders = searchshoporder(status)
     # print("[352] searchMyOrders", searchMyOrders)
     # for x in searchMyOrders:
@@ -389,7 +413,7 @@ def homee(status=3):
                             product_form = Product_Form,
                             user = User.query.filter_by(id=current_user.get_id()).first(), 
                             has_shop=Shop.query.filter_by(uid=current_user.get_id()),
-                            searchMyOrders = searchMyOrders, 
+                            searchMyOrders = searchMyOrder0,
                             searchShopOrders = searchShopOrders
                         )
 
@@ -397,7 +421,7 @@ def homee(status=3):
 @login_required
 def home():
     print("home called default status = 3")
-    return homee(3)
+    return homee(0)
 
 
 @website.route('/#myorder', methods = ['GET','POST'])
@@ -424,7 +448,12 @@ def getStatus():
     information = request.data.decode()
     print("get status called")
     print(information)
-    # return homee(information)
+    # return big_string(homee(information),25,2)
     # return homee()
     return "I don't know what to return! QAQ"
     # return redirect('/?status=' + information)
+
+
+def big_string(s, a, b):
+    return ''.join(s.split('\n')[a:-b])
+    

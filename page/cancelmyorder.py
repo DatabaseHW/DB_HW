@@ -25,6 +25,8 @@ def cancelmyorder(Shop_Form, Product_Form, CancelMyOrder_Form, searchShops):
     print("[23] oid:", order_id)
     uid = current_user.get_id()
     order_sid = Order.query.filter_by(oid = order_id).first().sid
+    sname = Shop.query.filter_by(sid = order_sid).first().name
+    uname = User.query.filter_by(id = current_user.get_id()).first().name
     total_price = Order.query.filter_by(oid = order_id).first().price
     end_time = str(date.today()) + ' ' + datetime.now().strftime("%H:%M:%S")
 
@@ -50,6 +52,12 @@ def cancelmyorder(Shop_Form, Product_Form, CancelMyOrder_Form, searchShops):
                 user_database.session.delete(delete_product)
                 user_database.session.add(new_product)
                 user_database.session.commit()
+
+    new_transaction1 = Transaction("Payment", end_time, uname, total_price)
+    new_transaction2 = Transaction("Receive", end_time, sname, total_price)
+    user_database.session.add(new_transaction1)
+    user_database.session.add(new_transaction2)
+    user_database.session.commit()
 
     # TODO error message: can not be float
     flash("加值成功",category="recharge success")

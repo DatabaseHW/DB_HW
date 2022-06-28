@@ -35,11 +35,11 @@ def doneshoporder(Shop_Form, Product_Form, DoneShopOrder_Form, searchShops):
     print("total_price:", total_price)
 
     # add transaction
-    new_transaction1 = Transaction("Payment", end_time, sname, str(total_price))
-    new_transaction2 = Transaction("Receive", end_time, uname, str(total_price))
-    user_database.session.add(new_transaction1)
-    user_database.session.add(new_transaction2)
-    user_database.session.commit()
+    # new_transaction1 = Transaction("Payment", end_time, sname, total_price)
+    # new_transaction2 = Transaction("Receive", end_time, uname, total_price)
+    # user_database.session.add(new_transaction1)
+    # user_database.session.add(new_transaction2)
+    # user_database.session.commit()
 
     # change order status
     delete_order = Order.query.filter_by(oid = order_id).first()

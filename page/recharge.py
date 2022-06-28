@@ -19,7 +19,20 @@ def recharge(Shop_Form, Product_Form, Recharge_Form, searchShops):
     # TODO: edit this file
     delete_user = User.query.filter_by(id = current_user.get_id()).first()
     # print("Recharge_Form.recharge_addvalue", vars(Recharge_Form.recharge_addvalue))
-    new_balance = Recharge_Form.recharge_addvalue.data + delete_user.balance
+
+    value = Recharge_Form.recharge_addvalue.data
+
+    # error message
+    if value <= 0:
+        flash("加值金額非正整數", category="order_product_not_pos_int")
+        return # what 
+    try:
+        int(value)
+    except:
+        flash("加值金額非正整數", category="order_product_not_pos_int")
+        return # what
+
+    new_balance = value + delete_user.balance
     new_user = User(delete_user.account, delete_user.passwd_hash, delete_user.name, delete_user.phonenumber, delete_user.latitude, delete_user.longitude, new_balance, delete_user.id, passwdHashed = True)
 
     user_database.session.delete(delete_user)

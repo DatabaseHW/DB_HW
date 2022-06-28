@@ -76,21 +76,22 @@ def order(Shop_Form, Product_Form, Order_Form, searchShops):
     # print("[42] shop_name:", shopName)
     # print("[43] price:", total_price)
     
+    # add order
     new_order = Order(uid, order_sid, "Not Finish", start_time, shopName, total_price)
     user_database.session.add(new_order)
     user_database.session.commit()
 
-    # add item(oid, pid, quantity, price, iid = None)
+    # add item
     print("[49] orderProducts:", orderProducts)
     for x in orderProducts:
-        # new_item = Item(str(new_order.oid), x.pid, x.quantity, x.quantity * x.price)
+        new_item = Item(str(new_order.oid), x.pid, x.quantity, x.quantity * x.price)
         new_item = Item(str(new_order.oid), x.pid, 10, x.price) # quantity is none, because product is none
         user_database.session.add(new_item)
 
         # minus product quantity
         delete_product = Product.query.filter_by(pid = x.pid).first()
-        # new_product = Product(x.sid, x.name, delete_product.quantity - x.quantity, x.price, x.picture, x.pid)
-        new_product = Product(x.sid, x.name, delete_product.quantity - 1, x.price, x.picture, x.pid) # quantity is none, because product is none 
+        new_product = Product(x.sid, x.name, delete_product.quantity - x.quantity, x.price, x.picture, x.pid)
+        # new_product = Product(x.sid, x.name, delete_product.quantity - 1, x.price, x.picture, x.pid) # quantity is none, because product is none 
         user_database.session.delete(delete_product)
         user_database.session.add(new_product)
         user_database.session.commit()

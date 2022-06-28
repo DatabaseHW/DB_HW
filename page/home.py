@@ -140,7 +140,7 @@ def searchmyorder(status):
                 # print("[129] prod:", type(prod), prod)
                 new_product = Product(prod.sid, prod.name, y.quantity, prod.price, prod.picture, prod.pid)
                 searchMyOrder[i].products.append(new_product)
-                print("[135] searchMyOrder[", i, "].products:", searchMyOrder[i].products)
+                # print("[135] searchMyOrder[", i, "].products:", searchMyOrder[i].products)
 
     for _ in range(len(searchMyOrder)):
         # print("[191] vars:", vars(searchShops[_]))
@@ -191,7 +191,7 @@ def searchshoporder(status):
                 prod = Product.query.filter_by(pid=y.pid).first()
                 new_product = Product(prod.sid, prod.name, y.quantity, prod.price, prod.picture, prod.pid)
                 searchShopOrder[i].products.append(new_product)
-                print("[135] searchShopOrder[", i, "].products:", searchShopOrder[i].products)
+                # print("[135] searchShopOrder[", i, "].products:", searchShopOrder[i].products)
 
     for _ in range(len(searchShopOrder)):
         # print("[191] vars:", vars(searchShops[_]))
@@ -204,10 +204,10 @@ def searchshoporder(status):
     
 
 
-@website.route('/<int:myOrderStatus>', methods = ['GET','POST'])
+@website.route('/<int:status>', methods = ['GET','POST'])
 @login_required
-def homee(myOrderStatus=3):
-    print("-------------- Status: ",myOrderStatus)
+def homee(status=3):
+    print("homee called Status: ",type(status),status)
     db__ = pymysql.connect(host='localhost', port=3306, user='root', passwd='', db='dbproject', charset='utf8')
     cur = db__.cursor()
     # if request.args.get('shopname') == "" and request.args.get('category') == "" :
@@ -342,9 +342,9 @@ def homee(myOrderStatus=3):
     # print("order_calc_price_submit:", OrderCalcPrice_Form.order_calc_price_submit.data)
     # print("Order_Form.order_submit:", Order_Form.order_submit.data)
     
-    print("CancelMyOrder_Form.searchMyOrder_Cancel_submit:", CancelMyOrder_Form.searchMyOrder_Cancel_submit.data)
-    print("CancelShopOrder_Form.searchShopOrder_Cancel_submit:", CancelShopOrder_Form.searchShopOrder_Cancel_submit.data)
-    print("DoneShopOrder_Form.searchShopOrder_Done_submit:", DoneShopOrder_Form.searchShopOrder_Done_submit.data)
+    # print("CancelMyOrder_Form.searchMyOrder_Cancel_submit:", CancelMyOrder_Form.searchMyOrder_Cancel_submit.data)
+    # print("CancelShopOrder_Form.searchShopOrder_Cancel_submit:", CancelShopOrder_Form.searchShopOrder_Cancel_submit.data)
+    # print("DoneShopOrder_Form.searchShopOrder_Done_submit:", DoneShopOrder_Form.searchShopOrder_Done_submit.data)
 
     # if MyOrder_Form.my_order_submit.data:
     #     return myorder(Shop_Form, Product_Form, MyOrder_Form, searchShops)
@@ -374,8 +374,8 @@ def homee(myOrderStatus=3):
         return product_modify(Shop_Form, Product_Form, Modify_Form)
 
     #search my order
-    searchMyOrders = searchmyorder(myOrderStatus)
-    searchShopOrders = searchshoporder(myOrderStatus)
+    searchMyOrders = searchmyorder(status)
+    searchShopOrders = searchshoporder(status)
     # print("[352] searchMyOrders", searchMyOrders)
     # for x in searchMyOrders:
     #     print(x.products)
@@ -389,7 +389,6 @@ def homee(myOrderStatus=3):
                             product_form = Product_Form,
                             user = User.query.filter_by(id=current_user.get_id()).first(), 
                             has_shop=Shop.query.filter_by(uid=current_user.get_id()),
-                            # searchMyOrders = [Order("1","1","1","1","1","1","1","1")]
                             searchMyOrders = searchMyOrders, 
                             searchShopOrders = searchShopOrders
                         )
@@ -397,6 +396,7 @@ def homee(myOrderStatus=3):
 @website.route('/', methods = ['GET','POST'])
 @login_required
 def home():
+    print("home called default status = 3")
     return homee(3)
 
 
@@ -422,10 +422,9 @@ def myorder():
 @website.route('/get-status', methods = ['POST'])
 def getStatus():
     information = request.data.decode()
-    # Shop_Form = ShopForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
-    # Product_Form = ProductForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
-    
-    # searchMyOrder = Order.query.all()
-    print("status info",information)
-    return "a"
-    # return redirect('http://tonych.me:3450#myorder?status='+str(information))
+    print("get status called")
+    print(information)
+    # return homee(information)
+    # return homee()
+    return "I don't know what to return! QAQ"
+    # return redirect('/?status=' + information)

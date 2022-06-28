@@ -43,6 +43,12 @@ def doneshoporder(Shop_Form, Product_Form, DoneShopOrder_Form, searchShops):
 
     # change order status
     delete_order = Order.query.filter_by(oid = order_id).first()
+    if delete_order.status == "Cancelled":
+        flash("商品已被取消",category="done_failed")
+        return 
+    if delete_order.status == "Finished":
+        flash("商品已完成",category="done_failed")
+        return 
     new_order = Order(uid, order_sid, "Finished", delete_order.start, delete_order.shop_name, total_price, delete_order.oid, end_time)
     user_database.session.delete(delete_order)
     user_database.session.add(new_order)

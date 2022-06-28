@@ -34,6 +34,10 @@ def cancelshoporder(Shop_Form, Product_Form, CancelShopOrder_Form, searchShops):
 
     # modify order status, end_time
     delete_order = Order.query.filter_by(oid = order_id).first()
+    if delete_order.status == "Cancelled":
+        flash("商品已被取消",category="cacnel_failed")
+        return 
+    
     new_order = Order(uid, order_sid, "Cancelled", delete_order.start, delete_order.shop_name, total_price, delete_order.oid, end_time)
     print("[35] delete_order:", delete_order)
     print("[36] new_order:", new_order)

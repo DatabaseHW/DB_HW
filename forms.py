@@ -29,7 +29,7 @@ class LocationForm(FlaskForm):
     location_submit = SubmitField('location_submit')
 
 class RechargeForm(FlaskForm):
-    recharge_addvalue = IntegerField(u'addvalue',validators=[DataRequired(message=u'儲值不可為空'), NumberRange(min=0,message="儲值不可為負")])
+    recharge_addvalue = IntegerField(u'addvalue',validators=[DataRequired(message=u'儲值不可為空，零，浮點數'), NumberRange(min=0,message="儲值不可為負")])
     recharge_submit = SubmitField('recharge_submit')
     print("[32] form.py recharge_addvalue:", recharge_addvalue)
 
@@ -38,28 +38,21 @@ class RechargeForm(FlaskForm):
 #     order_calc_price_submit = SubmitField('order_calc_price_submit')
 
 class OrderForm(FlaskForm):
-    pnum = StringField('pnum')
+    pnum1 = StringField('pnum1')
+    pnum2 = StringField('pnum2')
+    pnum3 = StringField('pnum3')
+    pnum4 = StringField('pnum4')
+    pnum5 = StringField('pnum5')
+    pnum6 = StringField('pnum6')
     order_sid = StringField('order_sid')
     calcPrice_total = IntegerField('calcPrice_total')
     order_submit = SubmitField('order_submit')
-
-    # all_product = Product.query.all()
-    # print("[41] all_product:", len(all_product))
-    # productNum = []
-    # for x in all_product:
-    #     print("[43] test")
-    #     print("[43] form:", type(x.pid))
-    #     # productNum+x.pid = IntegerField(str('productNum' + x.pid))
-        
-    # print(productNum,"\n------------------------------")
-
-    # print(order_sid, type(order_sid), "\n------------------------------")
-    # print(order_sid.data, "------------------------------")
 
 # class MyOrderForm(FlaskForm):
 #     my_order_submit = StringField('status')
 
 class CancelMyOrderForm(FlaskForm):
+    # put a string here, which one need cancelled, string = (the id in order table)
     searchMyOrder_oid = StringField('searchMyOrder_oid')
     searchMyOrder_Cancel_submit = StringField('searchMyOrder_Cancel_submit')
 

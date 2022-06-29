@@ -34,10 +34,26 @@
 #     # i don't wnat to refresh the home page, so that the order model in html can show properly
 #     # or, can we process "calculate price" in JavaScript ?
 #     return render_template(
-#                             "nav.html", 
-#                             user = User.query.filter_by(id=current_user.get_id()).first(), 
-#                             searchShops = searchShops, 
-#                             shop_form = Shop_Form,
-#                             product_form = Product_Form,
-#                             has_shop=Shop.query.filter_by(uid=current_user.get_id())
+                            # "nav.html", 
+                            # # old version is outerjoin in next line
+                            # shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                            # user = User.query.filter_by(id=current_user.get_id()).first(), 
+                            # has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
+                            # searchShops = searchShops, 
+                            # shop_form = Shop_Form, 
+                            # product_form = Product_Form, 
+                            # searchMyOrders0 = searchMyOrder0, 
+                            # searchMyOrders1 = searchMyOrder1, 
+                            # searchMyOrders2 = searchMyOrder2, 
+                            # searchMyOrders3 = searchMyOrder3, 
+                            # searchShopOrders0 = searchShopOrder0, 
+                            # searchShopOrders1 = searchShopOrder1, 
+                            # searchShopOrders2 = searchShopOrder2, 
+                            # searchShopOrders3 = searchShopOrder3, 
+                            # searchTransactionRecords0 = searchTransactionRecord0, 
+                            # searchTransactionRecords1 = searchTransactionRecord1, 
+                            # searchTransactionRecords2 = searchTransactionRecord2, 
+                            # searchTransactionRecords3 = searchTransactionRecord3, 
+                            location_form = Location_Form, 
+                            recharge_form = Recharge_Form 
 #                         )

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head></head>
+  <body>
+    <form>
+      <select class="custom-select" id="selectTest">
+        <option class="active">Choose one...</option>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+        <option>D</option>
+      </select>
+    </form><br>
+    <div id="showA"><p>data A</p></div>
+    <div id="showB"><p>data B</p></div>
+    <div id="showC"><p>data C</p></div>
+    <div id="showD"><p>data D</p></div>
+  </body>
+</html>
+<script>
+  var showA = document.getElementById("showA");
+  var showB = document.getElementById("showB");
+  var showC = document.getElementById("showC");
+  var showD = document.getElementById("showD");
+  var select = document.getElementById("selectTest");
+
+  select.onchange = function(){
+    value = select.options[select.selectedIndex].text;
+    showA.hidden = true;
+    showB.hidden = true;
+    showC.hidden = true;
+    showD.hidden = true;
+    if(value == "A"){
+      showA.hidden = false;
+    }
+    else if(value == "B"){
+      showB.hidden = false;
+    }
+    else if(value == "C"){
+      showC.hidden = false;
+    }
+    else {
+      showD.hidden = false;
+    }
+  }
+</script>

@@ -11,6 +11,7 @@ from flask_login import UserMixin
 from model.shop import Shop
 from model.user import User
 from model.product import Product
+from datetime import datetime, date
 
 bcrypt = Bcrypt(website)
 
@@ -24,9 +25,10 @@ class Order(user_database.Model, UserMixin):
     end = user_database.Column(user_database.String(256))
     shop_name = user_database.Column(user_database.String(256), ForeignKey("shops.name"))
     price = user_database.Column(user_database.Integer)
+    tmp_id = user_database.Column(user_database.String(256))
 
 
-    def __init__(self, uid, sid, status, start, shop_name, price, oid = None, end = ""):
+    def __init__(self, uid, sid, status, start, shop_name, price, oid = None, end = "", tmp_id = None):
         if oid == None:
             self.oid = bcrypt.generate_password_hash(uid + sid + start) # suck
         else:
@@ -38,6 +40,10 @@ class Order(user_database.Model, UserMixin):
         self.end = end
         self.shop_name = shop_name
         self.price = price
+        if(tmp_id == None):
+            self.tmp_id = bcrypt.generate_password_hash(uid + sid + str(date.today()) + ' ' + datetime.now().strftime("%H:%M:%S"))
+        else:
+            self.tmp_id = tmp_id
     
     def __repr__(self):
         return f'<Order {self.oid!r}>'

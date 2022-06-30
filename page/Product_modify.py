@@ -20,16 +20,18 @@ def product_modify(Modify_Form, searchShops, shop_product, Shop_Form, Product_Fo
     user_database.session.add(new_product)
     user_database.session.commit()
 
-    user_sid = Shop.query.filter_by(uid = current_user.get_id()).first().sid
-    shop_product = Product.query.all()
-    i = 0
-    while i < len(shop_product):
-        if(shop_product[i].sid != user_sid):
-            shop_product.remove(shop_product[i])
-            continue
-        i += 1
-    for i in range(len(shop_product)):
-        shop_product[i].ID = i + 1
+    shop_product = []
+    if Shop.query.filter_by(uid = current_user.get_id()).first() != None:
+        user_sid = Shop.query.filter_by(uid = current_user.get_id()).first().sid
+        shop_product = Product.query.all()
+        i = 0
+        while i < len(shop_product):
+            if(shop_product[i].sid != user_sid):
+                shop_product.remove(shop_product[i])
+                continue
+            i += 1
+        for i in range(len(shop_product)):
+            shop_product[i].ID = i + 1
         
     print("shop_product:")
     for i in range(len(shop_product)):

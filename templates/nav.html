@@ -16,8 +16,8 @@
   <title>Hello, world!</title>
 </head>
 
+
 <body>
- 
   <nav class="navbar navbar-inverse">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -31,7 +31,7 @@
   <div class="container">
 
     <ul class="nav nav-tabs">
-      <li class="active"><a href="#home">Home</a></li>
+      <li class="active"><a href="#home">home</a></li>
       <li><a href="#shop">shop</a></li>
       <li><a href="#myorder">MyOrder</a></li>
       <li><a href="#shoporder">Shop Order</a></li>
@@ -39,7 +39,7 @@
     </ul>
 
     <div class="tab-content">
-      <div id="home" class="tab-pane fade in active">
+      <div id="home" class="tab-pane in active">
         <!-- <div>
           <h3>Example counter</h3>
           <input class="result" id="exampleCnt" value=500 />
@@ -56,9 +56,46 @@
           </script>
         </div> -->
         <h3>Profile</h3>
+        {% with messages = get_flashed_messages(category_filter=["order_product_not_enough", "order_product_not_pos_int", "order_product_not_enough_money", "order_product_no_product"]) %}
+            {% if messages %}
+                <div class="model-body">
+                    {% for message in messages %}
+                        <div class="alert alert-warning" role="alert">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% with messages = get_flashed_messages(category_filter=["recharge_not_pos_int"]) %}
+            {% if messages %}
+                <div class="model-body">
+                    {% for message in messages %}
+                        <div class="alert alert-warning" role="alert">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        {% with messages = get_flashed_messages(category_filter=["order_product_success"]) %}
+            {% if messages %}
+                <div class="model-body">
+                    {% for message in messages %}
+                        <div class="alert alert-warning" role="alert">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         <div class="row">
           <div class="col-xs-10">
-            Accouont: {{ user.account }}, <br/>
+            <p>Account: {{ user.account }}, </p>
+            {% if has_shop is none %}
+              <p> Identity: User, </p>
+            {% endif %} 
+            {% if has_shop is not none %}
+              <p> Identity: Shop Keeper, </p>
+            {% endif %}
+            <!-- <br/> -->
             PhoneNumber: {{ user.phonenumber }}, <br/>
             location: {{ user.latitude }}, {{ user.longitude }}
             <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#Modal-Location">Edit Location</button></td>
@@ -77,10 +114,20 @@
                       <div class="row">
                         <div class="col-xs-6">
                           <label for="ex41">latitude</label>
+                          {% if location_form.location_submit.data %}
+                              {% for message in location_form.latitude_modify.errors %}
+                                  <div>{{ message }}</div>
+                              {% endfor %}
+                          {% endif %}
                           <input class="form-control" id="ex41" type="text" name="latitude_modify">
                         </div>
                         <div class="col-xs-6">
                           <label for="ex41">longitude</label>
+                          {% if location_form.location_submit.data %}
+                              {% for message in location_form.longitude_modify.errors %}
+                                  <div>{{ message }}</div>
+                              {% endfor %}
+                          {% endif %}
                           <input class="form-control" id="ex41" type="text" name="longitude_modify">
                         </div>
                       </div>
@@ -110,6 +157,11 @@
                                 <div class="row">
                                     <div class="col-xs-6">
                                         <label for="ex41">Add Value</label>
+                                        {% if recharge_form.recharge_submit.data %}
+                                            {% for message in recharge_form.recharge_addvalue.errors %}
+                                                <div>{{ message }}</div>
+                                            {% endfor %}
+                                        {% endif %}
                                         <input class="form-control" id="ex41" type="text" name="recharge_addvalue">
                                     </div>
                                 </div>
@@ -125,9 +177,7 @@
 
         </div>
 
-        <!-- 
-                
-             -->
+        
         <h3>Search</h3>
         <div class=" row  col-xs-8">
           <form class="form-horizontal" action="{{ url_for('home') }}">
@@ -150,7 +200,6 @@
             </div>
 
             <div class="form-group">
-
               <label class="control-label col-sm-1" for="Price">Price</label>
               <div class="col-sm-2">
 
@@ -204,9 +253,15 @@
               </thead>
               <tbody>
                 {% for searchShop in searchShops %}    
+                  
                   <script>
                     var prodpid{{ searchShop.ID }}=[]
                     var prodpric{{ searchShop.ID }}=[]
+                    var prodname{{ searchShop.ID }}=[]
+                    var prodpic{{ searchShop.ID }}=[]
+                    var prodqua{{ searchShop.ID }}=[]
+                    var prodnum{{ searchShop.ID }}=[]
+                    var content{{ searchShop.ID }}=''
                   </script>
 
                   <tr>
@@ -219,236 +274,233 @@
                     <td>
                       <button type="button" class="btn btn-info " data-toggle="modal" data-target="#openmenu{{ searchShop.ID }}">Open menu</button>
                       <!-- Modal -->
-                      <div class="modal fade" id="openmenu{{ searchShop.ID }}" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                        
-                          <!-- Modal content-->
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal">&times;</button>
-                              <h4 class="modal-title">{{ searchShop.name }} menu</h4>
-                            </div>
-                            <div class="modal-body">
-                              <!--  -->
-                              <div class="row">
-                                <div class=" col-xs-12">
-                                  <table class="table" style=" margin-top: 15px;">
-                                    <thead>
-                                      <tr>
-                                        <!-- <th scope="col">#</th> -->
-                                        <th scope="col">Picture</th>
-                                      
-                                        <th scope="col">meal name</th>
-                                    
-                                        <th scope="col">price</th>
-                                        <th scope="col">Quantity</th>
-                                      
-                                        <th scope="col">Order</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {% for product in searchShop.products %}
-                                        <tr>
-                                          <!-- <th scope="row">{{ product.ID }}</th> -->
-                                          <td>
-                                            {% if product.picture != '' %}
-                                              <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" with="50" heigh="10"><p>
-                                            {% endif %}
-                                          </td>
-                                          <td>{{ product.name }}</td>
-                                        
-                                          <td>{{ product.price }}</td>
-                                          <td>{{ product.quantity }}</td>
-                                      
-                                          <!-- <td> <input type="checkbox" id="cbox1" value="Hamburger"></td> -->
-
-                                          
-                                          <td>
-                                            <div>
-                                              <input class="form-control" id="productNum{{ product.pid }}" value=0 name="productNum{{ product.pid }}"/>
-                                              <button onClick="valInc('{{ product.pid }}')">+</button>
-                                              <button onClick="valDec('{{ product.pid }}')">-</button>
-                                              <script>
-                                                function valInc (productPid) {
-                                                  let counterVal = document.getElementById("productNum" + productPid);
-                                                  counterVal.value = parseInt(counterVal.value) + 1;
-                                                  if(parseInt(counterVal.value) < 0)
-                                                    counterVal.value = 0;
-
-                                                  console.log(counterVal.value)
-                                                }
-                                                function valDec (productPid) {
-                                                  let counterVal = document.getElementById("productNum" + productPid);
-                                                  counterVal.value = parseInt(counterVal.value) - 1;
-                                                  if(parseInt(counterVal.value) < 0)
-                                                    counterVal.value = 0;
-                                                  console.log(counterVal.value)
-                                                }
-                                              </script>
-                                            </div>
-                                          </td>
-                                        </tr>
-                                      {% endfor %}
-                                    </tbody>
-                                  </table>
-                                </div>
-                                
+                      <!-- <form method="post"> -->
+                        <div class="modal fade" id="openmenu{{ searchShop.ID }}" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                          
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">{{ searchShop.name }} menu</h4>
                               </div>
-                              <!--  -->
-                            </div>
-                            <label class="control-label col-sm-1" for="delivery_type">Type</label>
-                            <div class="col-sm-5">
-                              <select class="form-control" id="{{ searchShop.ID }}delivery_type" name="delivery_type">
-                                <option>Delivery</option>
-                                <option>Pick-up</option>
-                              </select>
-                            </div>
-                            <form method="post">
-                              <div class="modal-footer">
-                                <input value="{{ searchShop.sid | safe }}" name="order_sid">
-                                <input type="button" value="Calculate Price" class="btn btn-info" data-toggle="modal" onClick="calc{{ searchShop.ID }}()" data-target="#calcprice{{ searchShop.ID }}" name = "order_calc_price_submit">
-                                <!-- <input type="submit" value="Calculate Price" class="btn btn-info" data-toggle="modal" data-target="#calcprice{{ searchShop.ID }}" name = "order_calc_price_submit"> -->
-                              </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- Modal -->
-                      <div class="modal fade" id="calcprice{{ searchShop.ID }}" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                        
-                          <!-- Modal content-->
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal">&times;</button>
-                              <h4 class="modal-title">Order</h4>
-                            </div>
-                            
-                            <form method="post">
                               <div class="modal-body">
-                              <!--  -->
-                        
-                              <div class="row">
-                                <div class="  col-xs-12">
-                                  <table class="table" style=" margin-top: 15px;">
-                                    <thead>
-                                      <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Picture</th>
+                                <!--  -->
+                                <div class="row">
+                                  <div class=" col-xs-12">
+                                    <table class="table" style=" margin-top: 15px;">
+                                      <thead>
+                                        <tr>
+                                          <!-- <th scope="col">#</th> -->
+                                          <th scope="col">Picture</th>
+                                        
+                                          <th scope="col">meal name</th>
                                       
-                                        <th scope="col">meal name</th>
-                                    
-                                        <th scope="col">price</th>
-                                        <th scope="col">Order Quantity</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {% for _product in searchShop.products %}
-                                        <!-- <tr>
-                                          <th scope="row">{{ _product.ID }}</th>
-                                          <td>
-                                            {% if _product.picture != '' %}
-                                              <p><img src="data:image/jpeg;base64,{{ _product.picture | safe }}" with="50" heigh="10"><p>
-                                            {% endif %}
-                                          </td>
-                                          <td>{{ _product.name }}</td>
+                                          <th scope="col">price</th>
+                                          <th scope="col">Quantity</th>
                                         
-                                          <td>{{ _product.price }}</td>
-                                          <td>{{ _product.quantity }}</td>
-                                        </tr> -->
-                                        <!-- <input type="button" value="Calculate Price" class="btn btn-info" data-toggle="modal" onClick="calcSubtotal();calcDeliveryFee();calcTotal()" data-target="#calcprice{{ searchShop.ID }}" name = "order_calc_price_submit"> -->
-                                      {% endfor %}
-                                      <!-- add script here -->
-                                      <!-- show those product num > 0 -->
-
-                                    </tbody>
-                                  </table>
-                                </div>
-                              </div>
-                              <!--  -->
-                              </div>
-                              <div class="modal-footer">
-                                <table class="table" style=" margin-top: 15px;">
-                                  <tbody>
-                                    <div id="{{ searchShop.ID }}content"></div>
-                                    <input value="-1" id="{{ searchShop.ID }}deliveryFee_subtotal" name="deliveryFee_subtotal" hidden = True>
-                                    {% for _product in searchShop.products %}
-                                      <input value="{{ _product.pid }}" hidden=True/>
-                                      <script>  
-                                        prodpid{{ searchShop.ID }}.push("{{ _product.pid }}")
-                                        prodpric{{ searchShop.ID }}.push("{{ _product.price }}")
-                                        function dd{{ searchShop.ID }}(pids,pric){
+                                          <th scope="col">Order</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {% for product in searchShop.products %}
+                                          <tr>
+                                            <!-- <th scope="row">{{ product.ID }}</th> -->
+                                            <td>
+                                              {% if product.picture != '' %}
+                                                <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" width="100" heigh="10"><p>
+                                              {% endif %}
+                                            </td>
+                                            <td>{{ product.name }}</td>
                                           
-                                          console.log("initialize subtotal value")
-                                          document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value = 0
-                                          for(let i=0;i<pids.length;i++){
-                                            console.log(pids[i])
-                                            console.log(pric[i])
-
-                                            var el{{ searchShop.ID }} = document.getElementById('{{ searchShop.ID }}content');
-                                            var num{{ searchShop.ID }} = parseInt(document.getElementById("productNum"+pids[i]).value);
-                                            var content{{ searchShop.ID }};
-                                            console.log("num{{ searchShop.ID }}",num{{ searchShop.ID }})
-                                            if  (num{{ searchShop.ID }} > 0) {
-                                              content{{ searchShop.ID }} = "<tr><td>Hello world</td></tr>"
-                                              // content = '<tr><td>{% if _product.picture != "" %}<p><img src="data:image/jpeg;base64,{{ _product.picture | safe }}" with="50" heigh="10"><p>{% endif %}</td><td>"{{ _product.name }}"</td><td>"{{ _product.price }}"</td><td>"{{ _product.quantity }}"</td></tr>';
-                                              console.log(pids[i])
-                                              document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value = parseInt(pric[i]) * num{{ searchShop.ID }} + parseInt(document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value);
-                                              console.log("cur sub total")
-                                              console.log(document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value);
-                                            }
-                                            else {
-                                              content{{ searchShop.ID }} = '';
-                                            }
-                                            el{{ searchShop.ID }}.insertAdjacentHTML('afterbegin', content{{ searchShop.ID }});
-                                          }
-                                        }
+                                            <td>{{ product.price }}</td>
+                                            <td>{{ product.quantity }}</td>
                                         
-                                        function calc{{ searchShop.ID }}(){
-                                          dd{{ searchShop.ID }}(prodpid{{ searchShop.ID }},prodpric{{ searchShop.ID }});
-                                          calcSubtotal{{ searchShop.ID }}();
-                                          calcDeliveryFee{{ searchShop.ID }}();
-                                          calcTotal{{ searchShop.ID }}();
-                                        }
-                                        function calcSubtotal{{ searchShop.ID }}(){
-                                          document.getElementById("{{ searchShop.ID }}calcPrice_subtotal").value = document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value;
-                                        }
-                                        function calcDeliveryFee{{ searchShop.ID }}() {
-                                          let deliveryType = document.getElementById("{{ searchShop.ID }}delivery_type");
-                                          let deliveryFee_delivery = document.getElementById("{{ searchShop.ID }}deliveryFee_delivery");
-                                          let calcPrice_deliveryFee = document.getElementById("{{ searchShop.ID }}calcPrice_deliveryFee");
-                                          if(deliveryType.value === "Pick-up"){
-                                            calcPrice_deliveryFee.value = 0;
-                                          }
-                                          else{
-                                            calcPrice_deliveryFee.value = deliveryFee_delivery.value;
-                                          }
-                                        }
-                                        function calcTotal{{ searchShop.ID }}() {
-                                          let subtotal = document.getElementById("{{ searchShop.ID }}calcPrice_subtotal");
-                                          let deliveryFee = document.getElementById("{{ searchShop.ID }}calcPrice_deliveryFee");
-                                          let total = document.getElementById("{{ searchShop.ID }}calcPrice_total");
-                                          total.value = parseInt(subtotal.value) + parseInt(deliveryFee.value);
-                                        }
-                                      </script>
-                                    {% endfor %}
-                                  </tbody>
-                                </table>
-                                <h5>Subtotal: $<input class="form-control" id="{{ searchShop.ID }}calcPrice_subtotal" value=-1 name="calcPrice_subtotal"/></h5>
-                                <h5>Delivery fee: $ <input class="form-control" id="{{ searchShop.ID }}calcPrice_deliveryFee" value="-1" name="calcPrice_deliveryFee"/></h5>
-                                <h5>Total Price: $ <input class="form-control" id="{{ searchShop.ID }}calcPrice_total" value=100 name="calcPrice_total"/></h5>
-                                <input value="{{ searchShop.sid | safe }}" name="order_sid" hidden = True>
-                                <input value="{{ searchShop.deliveryFee | safe }}" id="{{ searchShop.ID }}deliveryFee_delivery" name="deliveryFee_delivery" hidden = True>
-                                <input type="submit" value="Order" class="btn btn-primary" name = "order_submit">
-                                <!-- <input type="submit" value="Order" class="btn btn-primary" name = "order_text"> -->
-                                <script>
-          
-                                </script>
+                                            <!-- <td> <input type="checkbox" id="cbox1" value="Hamburger"></td> -->
+
+                                            
+                                            <td>
+                                              <!-- <form method="post"> -->
+                                                <div>
+                                                  <input class="form-control" id="productNum{{ product.pid }}" value=0 name="productNum{{ product.pid }}"/>
+                                                  <button onClick="valInc('{{ product.pid }}')">+</button>
+                                                  <button onClick="valDec('{{ product.pid }}')">-</button>
+                                                  <script>
+                                                    function valInc (productPid) {
+                                                      let counterVal = document.getElementById("productNum" + productPid);
+                                                      counterVal.value = parseInt(counterVal.value) + 1;
+                                                      if(parseInt(counterVal.value) < 0)
+                                                        counterVal.value = 0;
+                                                    }
+                                                    function valDec (productPid) {
+                                                      let counterVal = document.getElementById("productNum" + productPid);
+                                                      counterVal.value = parseInt(counterVal.value) - 1;
+                                                      if(parseInt(counterVal.value) < 0)
+                                                        counterVal.value = 0;
+                                                    }
+                                                  </script>
+                                                </div>
+                                              <!-- </form> -->
+                                            </td>
+                                          </tr>
+                                        {% endfor %}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  
+                                </div>
+                                <!--  -->
                               </div>
-                            </form>
+                              <label class="control-label col-sm-1" for="delivery_type">Type</label>
+                              <div class="col-sm-5">
+                                <select class="form-control" id="{{ searchShop.ID }}delivery_type" name="delivery_type">
+                                  <option>Delivery</option>
+                                  <option>Pick-up</option>
+                                </select>
+                              </div>
+                              <form method="post">
+                                <div class="modal-footer">
+                                  <input value="{{ searchShop.sid | safe }}" name="order_sid" hidden="True">
+                                  <input type="button" value="Calculate Price" class="btn btn-info" data-toggle="modal" onClick="calc{{ searchShop.ID }}()" data-target="#calcprice{{ searchShop.ID }}" name = "order_calc_price_submit">
+                                  <!-- <input type="submit" value="Calculate Price" class="btn btn-info" data-toggle="modal" data-target="#calcprice{{ searchShop.ID }}" name = "order_calc_price_submit"> -->
+                                </div>
+                              </form>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="calcprice{{ searchShop.ID }}" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                          
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Order</h4>
+                              </div>
+                              <form method="post">
+                                <div class="modal-body">
+                                <!--  -->
+                          
+                                <div class="row">
+                                  <div class="  col-xs-12">
+                                    <table class="table" style=" margin-top: 15px;">
+                                      <thead>
+                                        <tr>
+                                          <!-- <th scope="col">#</th> -->
+                                          <th scope="col">Picture</th>
+                                        
+                                          <th scope="col">meal name</th>
+                                      
+                                          <th scope="col">price</th>
+                                          <th scope="col">Order Quantity</th>
+                                        </tr>
+                                      </thead>
+                                    </table>
+                                  </div>
+                                </div>
+                                <!--  -->
+                                </div>
+                                <div class="modal-footer">
+                                  <table class="table" style=" margin-top: 15px;">
+                                    <input value="-1" id="{{ searchShop.ID }}deliveryFee_subtotal" name="deliveryFee_subtotal" hidden = True>
+                                    <input value="Not triggered" id="pnum{{ searchShop.ID }}" name="pnum{{ searchShop.ID }}">
+                                    <tbody id="{{ searchShop.ID }}content">
+                                      {% for _product in searchShop.products %}
+                                        <input value="{{ _product.pid }}" hidden=True/>
+                                        <script>  
+                                          prodpid{{ searchShop.ID }}.push("{{ _product.pid }}")
+                                          prodpric{{ searchShop.ID }}.push("{{ _product.price }}")
+                                          prodname{{ searchShop.ID }}.push("{{ _product.name }}")
+                                          prodpic{{ searchShop.ID }}.push("{{ _product.picture | safe }}")
+                                          prodqua{{ searchShop.ID }}.push("{{ _product.quantity }}")
+                                          function dd{{ searchShop.ID }}(pids,pric,name,pic,qua){
+                                            document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value = 0
+                                            var content{{ searchShop.ID }} = document.getElementById("{{ searchShop.ID }}content");
+                                            content{{ searchShop.ID }}.value = ''
+                                            console.log("length = ",pids.length)
+                                            prodnum{{ searchShop.ID }}=[]
+                                            var el{{ searchShop.ID }} = document.getElementById('{{ searchShop.ID }}content');
+                                            for(let i=0;i<pids.length;i++){
+                                              var num{{ searchShop.ID }} = parseInt(document.getElementById("productNum"+pids[i]).value);
+                                              if (num{{ searchShop.ID }} > 0){
+                                                // content{{ searchShop.ID }}.value = content{{ searchShop.ID }}.value + "<tr><td>Hello world</td></tr>"
+                                                if(pic[i]!=""){
+                                                  content{{ searchShop.ID }}.value = content{{ searchShop.ID }}.value + '<tr><td><p><img src="data:image/jpeg;base64,'+pic[i]+'" width="100" heigh="10"></p></td><td>'+name[i]+'</td><td>'+pric[i]+'</td><td>'+num{{ searchShop.ID }}+'</td></tr>';
+                                                }
+                                                else{
+                                                  content{{ searchShop.ID }}.value = content{{ searchShop.ID }}.value + '<tr><td></td><td>'+name[i]+'</td><td>'+pric[i]+'</td><td>'+num{{ searchShop.ID }}+'</td></tr>';
+                                                }
+                                                // content = '<tr><td>{% if _product.picture != "" %}<p><img src="data:image/jpeg;base64,{{ _product.picture | safe }}" with="50" heigh="10"><p>{% endif %}</td><td>"{{ _product.name }}"</td><td>"{{ _product.price }}"</td><td>"{{ _product.quantity }}"</td></tr>';
+                                                document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value = parseInt(pric[i]) * num{{ searchShop.ID }} + parseInt(document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value);
+                                              }
+                                              else {
+                                                // content{{ searchShop.ID }} = '';
+                                              }
+                                              prodnum{{ searchShop.ID }}.push(num{{ searchShop.ID }})
+                                            }
+                                            el{{ searchShop.ID }}.innerHTML=content{{ searchShop.ID }}.value;
+                                            // console.log(content{{ searchShop.ID }}.value)
+                                            // console.log(document.getElementById("{{ searchShop.ID }}content"))
+                                            // console.log(el{{ searchShop.ID }})
+                                          }
+                                          
+                                          function calc{{ searchShop.ID }}(){
+                                            dd{{ searchShop.ID }}(prodpid{{ searchShop.ID }},prodpric{{ searchShop.ID }},prodname{{ searchShop.ID }},prodpic{{ searchShop.ID }},prodqua{{ searchShop.ID }});
+                                            calcSubtotal{{ searchShop.ID }}();
+                                            calcDeliveryFee{{ searchShop.ID }}();
+                                            calcTotal{{ searchShop.ID }}();
+                                            console.log("run gen pnum{{ searchShop.ID }}")
+                                            console.log(prodnum{{ searchShop.ID }})
+                                            genProdNum{{ searchShop.ID }}(prodnum{{ searchShop.ID }});
+
+                                          }
+                                          function calcSubtotal{{ searchShop.ID }}(){
+                                            document.getElementById("{{ searchShop.ID }}calcPrice_subtotal").value = document.getElementById("{{ searchShop.ID }}deliveryFee_subtotal").value;
+                                          }
+                                          function calcDeliveryFee{{ searchShop.ID }}() {
+                                            let deliveryType = document.getElementById("{{ searchShop.ID }}delivery_type");
+                                            let deliveryFee_delivery = document.getElementById("{{ searchShop.ID }}deliveryFee_delivery");
+                                            let calcPrice_deliveryFee = document.getElementById("{{ searchShop.ID }}calcPrice_deliveryFee");
+                                            if(deliveryType.value === "Pick-up"){
+                                              calcPrice_deliveryFee.value = 0;
+                                            }
+                                            else{
+                                              calcPrice_deliveryFee.value = deliveryFee_delivery.value;
+                                            }
+                                          }
+                                          function calcTotal{{ searchShop.ID }}() {
+                                            let subtotal = document.getElementById("{{ searchShop.ID }}calcPrice_subtotal");
+                                            let deliveryFee = document.getElementById("{{ searchShop.ID }}calcPrice_deliveryFee");
+                                            let total = document.getElementById("{{ searchShop.ID }}calcPrice_total");
+                                            total.value = parseInt(subtotal.value) + parseInt(deliveryFee.value);
+                                          }
+                                          function genProdNum{{ searchShop.ID }}(pnum){
+                                            ret = document.getElementById("pnum{{ searchShop.ID }}")
+                                            document.getElementById("pnum{{ searchShop.ID }}").value = '{{ searchShop.sid }} ';
+                                            for(let i=0;i<pnum.length;i++){
+                                              ret.value = ret.value + pnum[i] + ' '
+                                            }
+                                            console.log(document.getElementById("pnum{{ searchShop.ID }}").value)
+                                          }
+                                        </script>
+                                      {% endfor %}
+                                      <!-- <div id="{{ searchShop.ID }}content" value="content{{ searchShop.ID }}"></div> -->
+                                    </tbody>
+                                  </table>
+                                  <h5>Subtotal: $<input class="form-control" id="{{ searchShop.ID }}calcPrice_subtotal" value=-1 name="calcPrice_subtotal" readonly/></h5>
+                                  <h5>Delivery fee: $ <input class="form-control" id="{{ searchShop.ID }}calcPrice_deliveryFee" value="-1" name="calcPrice_deliveryFee" readonly/></h5>
+                                  <h5>Total Price: $ <input class="form-control" id="{{ searchShop.ID }}calcPrice_total" value=100 name="calcPrice_total" readonly/></h5>
+                                  <input value="{{ searchShop.sid | safe }}" name="order_sid" hidden = True>
+                                  <input value="{{ searchShop.deliveryFee | safe }}" id="{{ searchShop.ID }}deliveryFee_delivery" name="deliveryFee_delivery" hidden = True>
+                                  <input type="submit" value="Order" class="btn btn-primary" name="order_submit">
+                                  <!-- <input type="submit" value="Order" class="btn btn-primary" name = "order_text"> -->
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      <!-- </form> -->
                     </td>
                   </tr>
                 {% endfor %}
@@ -460,6 +512,7 @@
       </div>
       
       <div id="shop" class="tab-pane fade">
+        {%if has_shop is none%}
         <h3> Start a business </h3>
         {% with messages = get_flashed_messages(category_filter=["name_repeated"]) %}
             {% if messages %}
@@ -516,16 +569,17 @@
             </div>
             </div>
         </form>
+        {% endif %}
         <hr>
+        
 
         {% if has_shop is not none%}
-            {% for _shop in has_shop %}
             <div class="jumbotron">
-                <h1 class="display-4">{{_shop.name}}</h1>
-                <p class="lead">Category: {{_shop.categorys}}</p>
+                <h1 class="display-4">{{has_shop.name}}</h1>
+                <p class="lead">Category: {{has_shop.categorys}}</p>
                 <hr class="my-4">
                 <p>owner: {{user.name}}</p>
-                <p>store location: ({{_shop.latitude}},{{_shop.longitude}})</p>
+                <p>store location: ({{has_shop.latitude}},{{has_shop.longitude}})</p>
                 <hr class="my-4">
                 <div class="row">
                     <div class="  col-xs-8">
@@ -544,7 +598,7 @@
                             </thead>
                             <tbody>
                               {% for _product in shop_product %}
-                                  {% if _product.Shop.sid == _shop.sid %}
+                                  {% if _product.Shop.sid == has_shop.sid %}
                                       <tr>
                                         <th scope="row">1</th>
                                         <td>
@@ -581,7 +635,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <input value="{{ _product.pid | safe}}" name = "modify_pid" hidden = True>
+                                                            <input value="{{ _product.pid | safe}}" name="modify_pid" hidden = True>
                                                             <input type="submit" value="Edit" class="btn btn-secondary" name="Modify_submit">
                                                         </div>
                                                     </form>  
@@ -602,7 +656,7 @@
                 </div>
                 <p class="lead">
             </div>
-            {% endfor %}
+            
             <h3>ADD</h3>
             <form method="post" enctype=multipart/form-data class="fh5co-form animate-box" data-animate-effect="fadeIn">
                 <div class="form-group ">
@@ -658,19 +712,30 @@
       <div id="myorder" class="tab-pane fade">
         
         <h3>Search My order</h3>
+        {% with messages = get_flashed_messages(category_filter=["my_cancel_success", "my_cancel_failed"]) %}
+            {% if messages %}
+                {% for message in messages %}                  
+                    <div class="alert alert-warning" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         <label class="control-label col-sm-1" for="status">status</label>
-        <!-- <form action="{{ url_for('myorder') }}"> -->
-          <!-- need POST ? -->
-        <div class="col-sm-5">
-          <select class="form-control" id="mySel" name="myOrderStatus" onchange="subb('mySel','myOrderStatus')">
-            <option value="0">All</option>
-            <option value="1">未完成</option>
-            <option value="2">已完成</option>
-            <option value="3">已取消</option>
-            <!-- selected -->
-          </select>
-        </div>
-        <!-- </form> -->
+        <form method = "post">
+          <div class="col-sm-5">
+            <!-- <select class="form-control" id="mySell" name="myOrderStatus" onchange="refreshList('mySell',[['smo01','smo02','smo03','smo04'],['smo11','smo12','smo13','smo14'],[],[]])"> -->
+            <select class="form-control" id="mySell" name="myOrderStatus" onchange="refreshList('mySell',[
+                [{% for searchMyOrder in searchMyOrders0 %} 'smo0{{searchMyOrder.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}],
+                [{% for searchMyOrder in searchMyOrders1 %} 'smo1{{searchMyOrder.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}],
+                [{% for searchMyOrder in searchMyOrders2 %} 'smo2{{searchMyOrder.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}],
+                [{% for searchMyOrder in searchMyOrders3 %} 'smo3{{searchMyOrder.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}]
+              ])">
+              <option value="0">All</option>
+              <option value="1">Not Finish</option>
+              <option value="2">Finished</option>
+              <option value="3">Cancelled</option>
+            </select>
+          </div>
+        </form>
         
         <div class="row">
           <div class="  col-xs-8">
@@ -688,18 +753,18 @@
                 </tr>
               </thead>
               <tbody>
-                {% for searchMyOrder in searchMyOrders %}    
-                  <tr>
+                {% for searchMyOrder in searchMyOrders0 %}    
+                  <tr id="smo0{{searchMyOrder.ID}}">
                     <th scope="row">{{ searchMyOrder.ID }}</th>
                     <td>{{ searchMyOrder.status }}</td>
-                    <td>{{ searchMyOrder.timeStart }}</td>
-                    <td>{{ searchMyOrder.timeEnd }}</td>
-                    <td>{{ searchMyOrder.shopName}}</td>
+                    <td>{{ searchMyOrder.start }}</td>
+                    <td>{{ searchMyOrder.end }}</td>
+                    <td>{{ searchMyOrder.shop_name}}</td>
                     <td>{{ searchMyOrder.price }}</td>
                     <td>
-                      <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail">Order Details</button>
+                      <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail{{ searchMyOrder.ID }}0">Order Details</button>
                       <!-- Modal -->
-                      <div class="modal fade" id="orderdetail" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                      <div class="modal fade" id="orderdetail{{ searchMyOrder.ID }}0" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog">
                         
                           <!-- Modal content-->
@@ -729,7 +794,7 @@
                                       <tr>
                                         <td>
                                           {% if product.picture != '' %}
-                                            <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" with="50" heigh="10"><p>
+                                            <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" width="100" heigh="10"><p>
                                           {% endif %}
                                         </td>
                                         <td>{{ product.name }}</td>
@@ -747,7 +812,237 @@
                             <!--  -->
                             </div>
                             <div class="modal-footer">
-                              Total Price { searchMyOrder.price }}
+                              <h4> Total Price: {{ searchMyOrder.price }} </h4>
+                            </div>
+                          </div>
+                          
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <form method="post">
+                        <input value="{{ searchMyOrder.oid | safe}}" name = "searchMyOrder_oid" hidden = True>
+                        <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+                {% for searchMyOrder in searchMyOrders1 %}    
+                  <tr id="smo1{{searchMyOrder.ID}}" hidden=true>
+                    <th scope="row">{{ searchMyOrder.ID }}</th>
+                    <td>{{ searchMyOrder.status }}</td>
+                    <td>{{ searchMyOrder.start }}</td>
+                    <td>{{ searchMyOrder.end }}</td>
+                    <td>{{ searchMyOrder.shop_name}}</td>
+                    <td>{{ searchMyOrder.price }}</td>
+                    <!-- <td>{{ searchMyOrder.products }}</td> -->
+                    <td>
+                      <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail{{ searchMyOrder.ID }}1">Order Details</button>
+                      <!-- Modal -->
+                      <div class="modal fade" id="orderdetail{{ searchMyOrder.ID }}1" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        
+                          <!-- Modal content-->
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Order Detail</h4>
+                            </div>
+                            <div class="modal-body">
+                            <!--  -->
+                      
+                            <div class="row">
+                              <div class="  col-xs-12">
+                                <table class="table" style=" margin-top: 15px;">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Picture</th>
+                                    
+                                      <th scope="col">meal name</th>
+                                  
+                                      <th scope="col">price</th>
+                                      <th scope="col">Order Quantity</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <!-- <tr><td>hello</td></tr> -->
+                                    <!-- <tr><td>{{ searchMyOrder.products }}</td></tr> -->
+                                    {% for product in searchMyOrder.products %}
+                                      <tr>
+                                        <td>
+                                          {% if product.picture != '' %}
+                                            <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" width="100" heigh="10"><p>
+                                          {% endif %}
+                                        </td>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ product.price }}</td>
+                                        <td>{{ product.quantity }}</td>
+                                      </tr>
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
+                              </div>
+
+                            </div>
+                            
+
+                            <!--  -->
+                            </div>
+                            <div class="modal-footer">
+                              <h4> Total Price: {{ searchMyOrder.price }} </h4>
+                            </div>
+                          </div>
+                          
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <form method="post">
+                        <input value="{{ searchMyOrder.oid | safe}}" name = "searchMyOrder_oid" hidden = True>
+                        <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+                {% for searchMyOrder in searchMyOrders2 %}    
+                  <tr id="smo2{{searchMyOrder.ID}}" hidden=true>
+                    <th scope="row">{{ searchMyOrder.ID }}</th>
+                    <td>{{ searchMyOrder.status }}</td>
+                    <td>{{ searchMyOrder.start }}</td>
+                    <td>{{ searchMyOrder.end }}</td>
+                    <td>{{ searchMyOrder.shop_name}}</td>
+                    <td>{{ searchMyOrder.price }}</td>
+                    <!-- <td>{{ searchMyOrder.products }}</td> -->
+                    <td>
+                      <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail{{ searchMyOrder.ID }}2">Order Details</button>
+                      <!-- Modal -->
+                      <div class="modal fade" id="orderdetail{{ searchMyOrder.ID }}2" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        
+                          <!-- Modal content-->
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Order Detail</h4>
+                            </div>
+                            <div class="modal-body">
+                            <!--  -->
+                      
+                            <div class="row">
+                              <div class="  col-xs-12">
+                                <table class="table" style=" margin-top: 15px;">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Picture</th>
+                                    
+                                      <th scope="col">meal name</th>
+                                  
+                                      <th scope="col">price</th>
+                                      <th scope="col">Order Quantity</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <!-- <tr><td>hello</td></tr> -->
+                                    <!-- <tr><td>{{ searchMyOrder.products }}</td></tr> -->
+                                    {% for product in searchMyOrder.products %}
+                                      <tr>
+                                        <td>
+                                          {% if product.picture != '' %}
+                                            <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" width="100" heigh="10"><p>
+                                          {% endif %}
+                                        </td>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ product.price }}</td>
+                                        <td>{{ product.quantity }}</td>
+                                      </tr>
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
+                              </div>
+
+                            </div>
+                            
+
+                            <!--  -->
+                            </div>
+                            <div class="modal-footer">
+                              <h4> Total Price: {{ searchMyOrder.price }} </h4>
+                            </div>
+                          </div>
+                          
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <form method="post">
+                        <input value="{{ searchMyOrder.oid | safe}}" name = "searchMyOrder_oid" hidden = True>
+                        <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                      </form>
+                    </td>
+                  </tr>
+                {% endfor %}
+                {% for searchMyOrder in searchMyOrders3 %}    
+                  <tr id="smo3{{searchMyOrder.ID}}" hidden=true>
+                    <th scope="row">{{ searchMyOrder.ID }}</th>
+                    <td>{{ searchMyOrder.status }}</td>
+                    <td>{{ searchMyOrder.start }}</td>
+                    <td>{{ searchMyOrder.end }}</td>
+                    <td>{{ searchMyOrder.shop_name}}</td>
+                    <td>{{ searchMyOrder.price }}</td>
+                    <!-- <td>{{ searchMyOrder.products }}</td> -->
+                    <td>
+                      <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail{{ searchMyOrder.ID }}3">Order Details</button>
+                      <!-- Modal -->
+                      <div class="modal fade" id="orderdetail{{ searchMyOrder.ID }}3" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        
+                          <!-- Modal content-->
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Order Detail</h4>
+                            </div>
+                            <div class="modal-body">
+                            <!--  -->
+                      
+                            <div class="row">
+                              <div class="  col-xs-12">
+                                <table class="table" style=" margin-top: 15px;">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Picture</th>
+                                    
+                                      <th scope="col">meal name</th>
+                                  
+                                      <th scope="col">price</th>
+                                      <th scope="col">Order Quantity</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <!-- <tr><td>hello</td></tr> -->
+                                    <!-- <tr><td>{{ searchMyOrder.products }}</td></tr> -->
+                                    {% for product in searchMyOrder.products %}
+                                      <tr>
+                                        <td>
+                                          {% if product.picture != '' %}
+                                            <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" width="100" heigh="10"><p>
+                                          {% endif %}
+                                        </td>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ product.price }}</td>
+                                        <td>{{ product.quantity }}</td>
+                                      </tr>
+                                    {% endfor %}
+                                  </tbody>
+                                </table>
+                              </div>
+
+                            </div>
+                            
+                            <!--  -->
+                            </div>
+                            <div class="modal-footer">
+                              <h4> Total Price: {{ searchMyOrder.price }} </h4>
                             </div>
                           </div>
                           
@@ -765,23 +1060,41 @@
               </tbody>
             </table>
           </div>
-
         </div>
       </div>
 
       <div id="shoporder" class="tab-pane fade">
-        {% for _shop in has_shop %}
-          <h3>Search {{ _shop.name }} order</h3>
-          <input value="{{ _shop.sid }}" name="shopid" hidden=True/>
+        {% if has_shop is none %}
+          <h3>You have no shop</h3>
+        {% endif %}
+
+        {% if has_shop is not none %}
+          <h3>Search {{ has_shop.name }} order</h3>
+          {% with messages = get_flashed_messages(category_filter=["shop_cancel_success", "shop_cancel_failed", "shop_done_success", "shop_done_failed"]) %}
+              {% if messages %}
+                  {% for message in messages %}                  
+                      <div class="alert alert-warning" role="alert">{{ message }}</div>
+                  {% endfor %}
+              {% endif %}
+          {% endwith %}
+          <!-- <input value="{{ has_shop.sid }}" name="shopid" hidden=True/> -->
           <label class="control-label col-sm-1" for="status">status</label>
+          <form method = "post">
           <div class="col-sm-5">
-            <select class="form-control" id="sel1" name="status">
-              <option>All</option>
-              <option>未完成</option>
-              <option>已完成</option>
-              <option>已取消</option>
+            <select class="form-control" id="shopSell" name="shopOrderStatus" onchange="refreshList('shopSell',[
+                [{% for searchShopOrder in searchShopOrders0 %} 'sso0{{searchShopOrder.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}],
+                [{% for searchShopOrder in searchShopOrders1 %} 'sso1{{searchShopOrder.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}],
+                [{% for searchShopOrder in searchShopOrders2 %} 'sso2{{searchShopOrder.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}],
+                [{% for searchShopOrder in searchShopOrders3 %} 'sso3{{searchShopOrder.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}]
+              ])">
+              <option value="0">All</option>
+              <option value="1">Not Finish</option>
+              <option value="2">Finished</option>
+              <option value="3">Cancelled</option>
             </select>
           </div>
+        </form>
+
           <div class="row">
             <div class="  col-xs-8">
               <table class="table" style=" margin-top: 15px;">
@@ -798,18 +1111,18 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for searchShopOrder in searchShopOrders %}    
-                    <tr>
+                  {% for searchShopOrder in searchShopOrders0 %}    
+                    <tr id="sso0{{searchShopOrder.ID}}">
                       <th scope="row">{{ searchShopOrder.ID }}</th>
                       <td>{{ searchShopOrder.status }}</td>
-                      <td>{{ searchShopOrder.timeStart }}</td>
-                      <td>{{ searchShopOrder.timeEnd }}</td>
-                      <td>{{ searchShopOrder.shopName}}</td>
+                      <td>{{ searchShopOrder.start }}</td>
+                      <td>{{ searchShopOrder.end }}</td>
+                      <td>{{ searchShopOrder.shop_name}}</td>
                       <td>{{ searchShopOrder.price }}</td>
                       <td>
-                        <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail">Order Details</button>
+                        <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail{{ searchShopOrder.ID }}0">Order Details</button>
                         <!-- Modal -->
-                        <div class="modal fade" id="orderdetail" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal fade" id="orderdetail{{ searchShopOrder.ID }}0" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                           <div class="modal-dialog">
                           
                             <!-- Modal content-->
@@ -839,7 +1152,7 @@
                                         <tr>
                                           <td>
                                             {% if product.picture != '' %}
-                                              <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" with="50" heigh="10"><p>
+                                              <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" width="100" heigh="10"><p>
                                             {% endif %}
                                           </td>
                                           <td>{{ product.name }}</td>
@@ -857,7 +1170,232 @@
                               <!--  -->
                               </div>
                               <div class="modal-footer">
-                                Total Price { searchShopOrder.price }}
+                                <h4> Total Price: {{ searchShopOrder.price }} </h4>
+                              </div>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <form method="post">
+                          <input value="{{ searchShopOrder.oid | safe}}" name = "searchShopOrder_oid" hidden = True>
+                          <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
+                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                        </form>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  {% for searchShopOrder in searchShopOrders1 %}    
+                    <tr id="sso1{{searchShopOrder.ID}}" hidden=true>
+                      <th scope="row">{{ searchShopOrder.ID }}</th>
+                      <td>{{ searchShopOrder.status }}</td>
+                      <td>{{ searchShopOrder.start }}</td>
+                      <td>{{ searchShopOrder.end }}</td>
+                      <td>{{ searchShopOrder.shop_name}}</td>
+                      <td>{{ searchShopOrder.price }}</td>
+                      <td>
+                        <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail{{ searchShopOrder.ID }}1">Order Details</button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="orderdetail{{ searchShopOrder.ID }}1" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                          
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Order Detail</h4>
+                              </div>
+                              <div class="modal-body">
+                              <!--  -->
+                        
+                              <div class="row">
+                                <div class="  col-xs-12">
+                                  <table class="table" style=" margin-top: 15px;">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Picture</th>
+                                      
+                                        <th scope="col">meal name</th>
+                                    
+                                        <th scope="col">price</th>
+                                        <th scope="col">Order Quantity</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for product in searchShopOrder.products %}
+                                        <tr>
+                                          <td>
+                                            {% if product.picture != '' %}
+                                              <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" width="100" heigh="10"><p>
+                                            {% endif %}
+                                          </td>
+                                          <td>{{ product.name }}</td>
+                                          <td>{{ product.price }}</td>
+                                          <td>{{ product.quantity }}</td>
+                                        </tr>
+                                      {% endfor %}
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                              </div>
+                              
+
+                              <!--  -->
+                              </div>
+                              <div class="modal-footer">
+                                <h4> Total Price: {{ searchShopOrder.price }} </h4>
+                              </div>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <form method="post">
+                          <input value="{{ searchShopOrder.oid | safe}}" name = "searchShopOrder_oid" hidden = True>
+                          <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
+                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                        </form>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  {% for searchShopOrder in searchShopOrders2 %}    
+                    <tr id="sso2{{searchShopOrder.ID}}" hidden=true>
+                      <th scope="row">{{ searchShopOrder.ID }}</th>
+                      <td>{{ searchShopOrder.status }}</td>
+                      <td>{{ searchShopOrder.start }}</td>
+                      <td>{{ searchShopOrder.end }}</td>
+                      <td>{{ searchShopOrder.shop_name}}</td>
+                      <td>{{ searchShopOrder.price }}</td>
+                      <td>
+                        <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail{{ searchShopOrder.ID }}2">Order Details</button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="orderdetail{{ searchShopOrder.ID }}2" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                          
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Order Detail</h4>
+                              </div>
+                              <div class="modal-body">
+                              <!--  -->
+                        
+                              <div class="row">
+                                <div class="  col-xs-12">
+                                  <table class="table" style=" margin-top: 15px;">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Picture</th>
+                                      
+                                        <th scope="col">meal name</th>
+                                    
+                                        <th scope="col">price</th>
+                                        <th scope="col">Order Quantity</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for product in searchShopOrder.products %}
+                                        <tr>
+                                          <td>
+                                            {% if product.picture != '' %}
+                                              <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" width="100" heigh="10"><p>
+                                            {% endif %}
+                                          </td>
+                                          <td>{{ product.name }}</td>
+                                          <td>{{ product.price }}</td>
+                                          <td>{{ product.quantity }}</td>
+                                        </tr>
+                                      {% endfor %}
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                              </div>
+                              
+
+                              <!--  -->
+                              </div>
+                              <div class="modal-footer">
+                                <h4> Total Price: {{ searchShopOrder.price }} </h4>
+                              </div>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <form method="post">
+                          <input value="{{ searchShopOrder.oid | safe}}" name = "searchShopOrder_oid" hidden = True>
+                          <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
+                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                        </form>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                  {% for searchShopOrder in searchShopOrders3 %}    
+                    <tr id="sso3{{searchShopOrder.ID}}" hidden=true>
+                      <th scope="row">{{ searchShopOrder.ID }}</th>
+                      <td>{{ searchShopOrder.status }}</td>
+                      <td>{{ searchShopOrder.start }}</td>
+                      <td>{{ searchShopOrder.end }}</td>
+                      <td>{{ searchShopOrder.shop_name}}</td>
+                      <td>{{ searchShopOrder.price }}</td>
+                      <td>
+                        <button type="button" class="btn btn-info " data-toggle="modal" data-target="#orderdetail{{ searchShopOrder.ID }}3">Order Details</button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="orderdetail{{ searchShopOrder.ID }}3" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                          
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Order Detail</h4>
+                              </div>
+                              <div class="modal-body">
+                              <!--  -->
+                        
+                              <div class="row">
+                                <div class="  col-xs-12">
+                                  <table class="table" style=" margin-top: 15px;">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Picture</th>
+                                      
+                                        <th scope="col">meal name</th>
+                                    
+                                        <th scope="col">price</th>
+                                        <th scope="col">Order Quantity</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for product in searchShopOrder.products %}
+                                        <tr>
+                                          <td>
+                                            {% if product.picture != '' %}
+                                              <p><img src="data:image/jpeg;base64,{{ product.picture | safe }}" width="100" heigh="10"><p>
+                                            {% endif %}
+                                          </td>
+                                          <td>{{ product.name }}</td>
+                                          <td>{{ product.price }}</td>
+                                          <td>{{ product.quantity }}</td>
+                                        </tr>
+                                      {% endfor %}
+                                    </tbody>
+                                  </table>
+                                </div>
+
+                              </div>
+                              
+
+                              <!--  -->
+                              </div>
+                              <div class="modal-footer">
+                                <h4> Total Price: {{ searchShopOrder.price }} </h4>
                               </div>
                             </div>
                             
@@ -876,22 +1414,29 @@
                 </tbody>
               </table>
             </div>
-
           </div>
-        {% endfor %}
+        {% endif %}
       </div>
 
       <div id="transactionrecord" class="tab-pane fade">
+
         <h3>Search transaction record</h3>
         <label class="control-label col-sm-1" for="action">Action</label>
-        <div class="col-sm-5">
-          <select class="form-control" id="sel1" name="action">
-            <option>All</option>
-            <option>Payment</option>
-            <option>Receive</option>
-            <option>Recharge</option>
-          </select>
-        </div>
+        <form method = "post">
+          <div class="col-sm-5">
+            <select class="form-control" id="tranSell" name="transactionAction" onchange="refreshList('tranSell',[
+                [{% for searchTransactionRecord in searchTransactionRecords0 %} 'sto0{{searchTransactionRecord.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}],
+                [{% for searchTransactionRecord in searchTransactionRecords1 %} 'sto1{{searchTransactionRecord.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}],
+                [{% for searchTransactionRecord in searchTransactionRecords2 %} 'sto2{{searchTransactionRecord.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}],
+                [{% for searchTransactionRecord in searchTransactionRecords3 %} 'sto3{{searchTransactionRecord.ID}}' {% if loop.index != loop.length %},{% endif %} {% endfor %}]
+              ])">
+              <option value="0">All</option>
+              <option value="1">Payment</option>
+              <option value="2">Receive</option>
+              <option value="3">Recharge</option>
+            </select>
+          </div>
+        </form>
         <div class="row">
           <div class="  col-xs-8">
             <table class="table" style=" margin-top: 15px;">
@@ -905,14 +1450,40 @@
                 </tr>
               </thead>
               <tbody>
-                {% for searchTransactionRecord in searchTransactionRecords %}    
-                  <tr>
+                {% for searchTransactionRecord in searchTransactionRecords0 %}
+                  <tr id="sto0{{searchTransactionRecord.ID}}">
                     <th scope="row">{{ searchTransactionRecord.ID }}</th>
-                    <td>{{ searchTransactionRecord.status }}</td>
-                    <td>{{ searchTransactionRecord.timeStart }}</td>
-                    <td>{{ searchTransactionRecord.timeEnd }}</td>
-                    <td>{{ searchTransactionRecord.shopName}}</td>
-                    <td>{{ searchTransactionRecord.price }}</td>
+                    <td>{{ searchTransactionRecord.action }}</td>
+                    <td>{{ searchTransactionRecord.trans_time }}</td>
+                    <td>{{ searchTransactionRecord.trader }}</td>
+                    <td>{{ searchTransactionRecord.change }}</td>
+                  </tr>
+                {% endfor %}
+                {% for searchTransactionRecord in searchTransactionRecords1 %}
+                  <tr id="sto1{{searchTransactionRecord.ID}}" hidden=true>
+                    <th scope="row">{{ searchTransactionRecord.ID }}</th>
+                    <td>{{ searchTransactionRecord.action }}</td>
+                    <td>{{ searchTransactionRecord.trans_time }}</td>
+                    <td>{{ searchTransactionRecord.trader }}</td>
+                    <td>{{ searchTransactionRecord.change }}</td>
+                  </tr>
+                {% endfor %}
+                {% for searchTransactionRecord in searchTransactionRecords2 %}
+                  <tr id="sto2{{searchTransactionRecord.ID}}" hidden=true>
+                    <th scope="row">{{ searchTransactionRecord.ID }}</th>
+                    <td>{{ searchTransactionRecord.action }}</td>
+                    <td>{{ searchTransactionRecord.trans_time }}</td>
+                    <td>{{ searchTransactionRecord.trader }}</td>
+                    <td>{{ searchTransactionRecord.change }}</td>
+                  </tr>
+                {% endfor %}
+                {% for searchTransactionRecord in searchTransactionRecords3 %}
+                  <tr id="sto3{{searchTransactionRecord.ID}}" hidden=true>
+                    <th scope="row">{{ searchTransactionRecord.ID }}</th>
+                    <td>{{ searchTransactionRecord.action }}</td>
+                    <td>{{ searchTransactionRecord.trans_time }}</td>
+                    <td>{{ searchTransactionRecord.trader }}</td>
+                    <td>{{ searchTransactionRecord.change }}</td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -926,24 +1497,49 @@
   <!-- Option 1: Bootstrap Bundle with Popper -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script> -->
   <script>
-    function init(){
-      document.getElementById('sel1').onchange=function(){subm(myOrderStatus)}
-    }
-    function subb(id,key){
+    function subb(id, _page){
       const URL = '/get-status'
       const xhr = new XMLHttpRequest();
-      var val=document.getElementById(id).value
+      var val = document.getElementById(id).value
       sender = JSON.stringify(val)
-      xhr.open('POST',URL);
+      xhr.open('POST', URL);
       xhr.send(sender);
-      window.location.href ="http://tonych.me:3450?myOrderStatus=7";
+      window.location.href = "http://tonych.me:3450#" + _page + "?status=" + document.getElementById(id).value;
+      // location.reload();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          // console.log(xhr.response)
+          // console.log(window.document.body)
+          // console.log(window.document)
+          // // window.document.body.innerHTML = xhr.response
+          // console.log(window.document)
+        }
+      }
     }
     $(document).ready(function () {
       $(".nav-tabs a").click(function () {
         $(this).tab('show');
       });
     });
-
+    function refreshList(selId,opdids){
+      // var ops=[opid0,opid1,opid2,opid3]
+      // opids.pop()
+      // var ops=[]
+      console.log(opdids)
+      for(opids in opdids){
+        for(opid in opdids[opids]){
+          // console.log(opdids[opids][opid])
+          document.getElementById(opdids[opids][opid]).hidden=true
+        }
+      }
+      var select = document.getElementById(selId);
+      value = select.value;
+      for(op in opdids[value]){
+        // console.log(op)
+        // console.log(ops[op])
+        document.getElementById(opdids[value][op]).hidden=false;
+      }
+    }
   </script>
 {% with messages = get_flashed_messages(category_filter=["product add errors", "product delete success", "product add success", "register success", "product modify success"]) %}
     {% if messages %}
@@ -963,5 +1559,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
     -->
 </body>
+
 
 </html>

@@ -9,6 +9,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import UserMixin
 
 from model.user import User
+from datetime import datetime, date
 
 bcrypt = Bcrypt(website)
 
@@ -20,8 +21,9 @@ class Product(user_database.Model, UserMixin):
     quantity = user_database.Column(user_database.Integer)
     price = user_database.Column(user_database.Integer)
     picture = user_database.Column(user_database.Text)
+    tmp_id = user_database.Column(user_database.String(256))
 
-    def __init__(self, sid, name, quantity, price, picture = None, pid = None):
+    def __init__(self, sid, name, quantity, price, picture = None, pid = None, tmp_id = None):
         self.sid = sid
         if(pid == None):
             self.pid = bcrypt.generate_password_hash(name + sid)
@@ -31,6 +33,10 @@ class Product(user_database.Model, UserMixin):
         self.quantity = quantity
         self.price = price
         self.picture = picture
+        if(tmp_id == None):
+            self.tmp_id = bcrypt.generate_password_hash(name + sid + str(date.today()) + ' ' + datetime.now().strftime("%H:%M:%S"))
+        else:
+            self.tmp_id = tmp_id
     
     # @Login_manager.user_loader
     # def load_shop(user_id):

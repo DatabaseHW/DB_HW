@@ -6,6 +6,7 @@ from wtforms import *
 from wtforms.validators import *
 from flask_wtf.file import *
 from flask_uploads import UploadSet, IMAGES
+from model.product import Product
 
 class LoginForm(FlaskForm):
     account = StringField('account',validators=[DataRequired(message=u'帳號不可為空'), Length(max=64,message=u"帳號過長")])
@@ -28,15 +29,26 @@ class LocationForm(FlaskForm):
     location_submit = SubmitField('location_submit')
 
 class RechargeForm(FlaskForm):
-    recharge_addvalue = IntegerField(u'addvalue',validators=[DataRequired(message=u'儲值不可為空'), NumberRange(min=0,message="儲值不可為負")])
+    recharge_addvalue = IntegerField(u'addvalue',validators=[DataRequired(message=u'儲值不可為空，零，浮點數'), NumberRange(min=0,message="儲值不可為負")])
     recharge_submit = SubmitField('recharge_submit')
+    print("[32] form.py recharge_addvalue:", recharge_addvalue)
 
 # class OrderCalcPriceForm(FlaskForm):
 #     order_sid = StringField(u'order_sid')
 #     order_calc_price_submit = SubmitField('order_calc_price_submit')
 
 class OrderForm(FlaskForm):
-    order_sid = StringField(u'order_sid')
+    pnum1 = StringField('pnum1')
+    pnum2 = StringField('pnum2')
+    pnum3 = StringField('pnum3')
+    pnum4 = StringField('pnum4')
+    pnum5 = StringField('pnum5')
+    pnum6 = StringField('pnum6')
+    pnum7 = StringField('pnum7')
+    pnum8 = StringField('pnum8')
+    pnum9 = StringField('pnum9')
+    pnum10 = StringField('pnum10')
+    order_sid = StringField('order_sid')
     calcPrice_total = IntegerField('calcPrice_total')
     order_submit = SubmitField('order_submit')
 
@@ -44,6 +56,7 @@ class OrderForm(FlaskForm):
 #     my_order_submit = StringField('status')
 
 class CancelMyOrderForm(FlaskForm):
+    # put a string here, which one need cancelled, string = (the id in order table)
     searchMyOrder_oid = StringField('searchMyOrder_oid')
     searchMyOrder_Cancel_submit = StringField('searchMyOrder_Cancel_submit')
 
@@ -75,6 +88,9 @@ class DeleteForm(FlaskForm):
     Delete_submit = SubmitField('Delete_submit')
 
 class ModifyForm(FlaskForm):
+    # a = "dog"
+    # a = StringField(u'modify_pid')
+    # x.pid = StringField(u'modify_pid')
     modify_pid = StringField(u'modify_pid')
     quantity_modify = IntegerField(u'數量',validators=[DataRequired(message=u'數量不可為空'), NumberRange(min=0, message="數量不可為負" )])
     price_modify = IntegerField(u'價格',validators=[DataRequired(message=u'價格不可為空'), NumberRange(min=0, message="價格不可為負" )])

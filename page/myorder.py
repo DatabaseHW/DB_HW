@@ -22,7 +22,7 @@
 #     return render_template(
                             # "nav.html", 
                             # # old version is outerjoin in next line
-                            # shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                            # shop_product = shop_product,
                             # user = User.query.filter_by(id=current_user.get_id()).first(), 
                             # has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
                             # searchShops = searchShops, 
@@ -40,6 +40,6 @@
                             # searchTransactionRecords1 = searchTransactionRecord1, 
                             # searchTransactionRecords2 = searchTransactionRecord2, 
                             # searchTransactionRecords3 = searchTransactionRecord3, 
-                            location_form = Location_Form, 
-                            recharge_form = Recharge_Form 
+                            # location_form = Location_Form, 
+                            # recharge_form = Recharge_Form 
 #                         )

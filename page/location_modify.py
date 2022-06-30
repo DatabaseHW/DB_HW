@@ -12,7 +12,7 @@ from model.shop import Shop
 from model.user import User
 from model.product import Product
 
-def location_modify(Location_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Recharge_Form):
+def location_modify(Location_Form, searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Recharge_Form):
     # TODO: edit this file
     delete_user = User.query.filter_by(id = current_user.get_id()).first()
     new_user = User(delete_user.account, delete_user.passwd_hash, delete_user.name, delete_user.phonenumber, Location_Form.latitude_modify.data, Location_Form.longitude_modify.data, delete_user.balance, delete_user.id, passwdHashed = True)
@@ -26,7 +26,7 @@ def location_modify(Location_Form, searchShops, Shop_Form, Product_Form, searchM
     return render_template(
                             "nav.html", 
                             # old version is outerjoin in next line
-                            shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                            shop_product = shop_product,
                             user = User.query.filter_by(id=current_user.get_id()).first(), 
                             has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
                             searchShops = searchShops, 

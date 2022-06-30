@@ -312,7 +312,7 @@ def searchtransactionrecord():
 
     return searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3
 
-def recharge(Recharge_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form):
+def recharge(Recharge_Form, searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form):
     # TODO: edit this file
     delete_user = User.query.filter_by(id = current_user.get_id()).first()
     # print("Recharge_Form.recharge_addvalue", vars(Recharge_Form.recharge_addvalue))
@@ -325,7 +325,7 @@ def recharge(Recharge_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0
         return render_template(
                                 "nav.html", 
                                 # old version is outerjoin in next line
-                                shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                                shop_product = shop_product,
                                 user = User.query.filter_by(id=current_user.get_id()).first(), 
                                 has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
                                 searchShops = searchShops, 
@@ -353,7 +353,7 @@ def recharge(Recharge_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0
         return render_template(
                                 "nav.html", 
                                 # old version is outerjoin in next line
-                                shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                                shop_product = shop_product,
                                 user = User.query.filter_by(id=current_user.get_id()).first(), 
                                 has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
                                 searchShops = searchShops, 
@@ -398,7 +398,7 @@ def recharge(Recharge_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0
     return render_template(
                             "nav.html", 
                             # old version is outerjoin in next line
-                            shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                            shop_product = shop_product,
                             user = User.query.filter_by(id=current_user.get_id()).first(), 
                             has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
                             searchShops = searchShops, 

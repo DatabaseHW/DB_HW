@@ -605,34 +605,52 @@ def homee(status=3):
     # print("[308] Recharge_Form.recharge_addvalue:", Recharge_Form.recharge_addvalue)
     # print("[309] Order_Form.productNum:", Order_Form.productNum)
     # print("[310] Recharge_Form.recharge_submit.data:", Recharge_Form.recharge_submit.data)
+    
+    user_sid = Shop.query.filter_by(uid = current_user.get_id()).first().sid
+    shop_product = Product.query.all()
+    i = 0
+    while i < len(shop_product):
+        if(shop_product[i].sid != user_sid):
+            shop_product.remove(shop_product[i])
+            continue
+        i += 1
+    for i in range(len(shop_product)):
+        shop_product[i].ID = i + 1
+        
+    print("shop_product:")
+    for i in range(len(shop_product)):
+        print("shop_product:", shop_product[i])
 
     if CancelMyOrder_Form.searchMyOrder_Cancel_submit.data and CancelMyOrder_Form.validate():
-        return cancelmyorder(CancelMyOrder_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
+        return cancelmyorder(CancelMyOrder_Form, searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
     elif CancelShopOrder_Form.searchShopOrder_Cancel_submit.data and CancelShopOrder_Form.validate():
-        return cancelshoporder(CancelShopOrder_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
+        return cancelshoporder(CancelShopOrder_Form, searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
     elif DoneShopOrder_Form.searchShopOrder_Done_submit.data and DoneShopOrder_Form.validate():
-        return doneshoporder(DoneShopOrder_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
+        return doneshoporder(DoneShopOrder_Form, searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
     elif Order_Form.order_submit.data and Order_Form.validate():
-        return order(Order_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
+        return order(Order_Form, searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
     elif Location_Form.location_submit.data and Location_Form.validate():
-        return location_modify(Location_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Recharge_Form)
+        return location_modify(Location_Form, searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Recharge_Form)
     elif Recharge_Form.recharge_submit.data and Recharge_Form.validate():
-        return recharge(Recharge_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form)
+        return recharge(Recharge_Form, searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form)
     elif Shop_Form.Register_submit.data and Shop_Form.validate():
-        return shop_register(searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
+        return shop_register(searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
     elif Product_Form.Add_submit.data and Product_Form.validate():
-        return product_add(searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
+        return product_add(searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
     elif Delete_Form.Delete_submit.data and Delete_Form.validate():
-        return product_delete(Delete_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
+        return product_delete(Delete_Form, searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
     elif Modify_Form.Modify_submit.data and Modify_Form.validate():
-        return product_modify(Modify_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
+        return product_modify(Modify_Form, searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3, Location_Form, Recharge_Form)
 
-# , searchShops, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3
-
+# , searchShops, shop_product, Shop_Form, Product_Form, searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3, searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3, searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3
+    # shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture)
+        
+    
     return render_template(
                             "nav.html", 
                             # old version is outerjoin in next line
-                            shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                            # shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                            shop_product = shop_product, 
                             user = User.query.filter_by(id=current_user.get_id()).first(), 
                             has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
                             searchShops = searchShops, 
@@ -767,6 +785,17 @@ def myorder():
     Location_Form = LocationForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     Recharge_Form = RechargeForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
 
+    user_sid = Shop.query.filter_by(uid = current_user.get_id()).first().sid
+    shop_product = Product.query.all()
+    i = 0
+    while i < len(shop_product):
+        if(shop_product[i].sid != user_sid):
+            shop_product.remove(shop_product[i])
+            continue
+        i += 1
+    for i in range(len(shop_product)):
+        shop_product[i].ID = i + 1
+    
     searchShops = searchshop_()
     searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3 = searchmyorder()
     searchShopOrder0, searchShopOrder1, searchShopOrder2, searchShopOrder3 = searchshoporder()
@@ -775,7 +804,7 @@ def myorder():
     return render_template(
                             "nav.html", 
                             # old version is outerjoin in next line
-                            shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                            shop_product = shop_product,
                             user = User.query.filter_by(id=current_user.get_id()).first(), 
                             has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
                             searchShops = searchShops, 

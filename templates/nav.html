@@ -598,9 +598,9 @@
                             </thead>
                             <tbody>
                               {% for _product in shop_product %}
-                                  {% if _product.Shop.sid == has_shop.sid %}
+                                  {% if _product.sid == has_shop.sid %}
                                       <tr>
-                                        <th scope="row">1</th>
+                                        <th scope="row">{{ _product.ID }}</th>
                                         <td>
                                           {% if _product.picture != '' %}
                                             <p><img src="data:image/jpeg;base64,{{ _product.picture | safe }}"><p>
@@ -1565,7 +1565,7 @@
       }
     }
   </script>
-{% with messages = get_flashed_messages(category_filter=["product add errors", "product delete success", "product add success", "register success", "product modify success"]) %}
+{% with messages = get_flashed_messages(category_filter=["product add errors", "product delete success", "product delete failed", "product add success", "register success", "product modify success"]) %}
     {% if messages %}
         <div class="model-body">
             {% for message in messages %}

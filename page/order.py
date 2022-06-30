@@ -299,6 +299,10 @@ def order(Order_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, sear
     all_pnum.append(Order_Form.pnum4.data)
     all_pnum.append(Order_Form.pnum5.data)
     all_pnum.append(Order_Form.pnum6.data)
+    all_pnum.append(Order_Form.pnum7.data)
+    all_pnum.append(Order_Form.pnum8.data)
+    all_pnum.append(Order_Form.pnum9.data)
+    all_pnum.append(Order_Form.pnum10.data)
     print("all_pnum:", all_pnum[0], all_pnum[1])
     i = 0
     while i < len(all_pnum):

@@ -313,11 +313,57 @@ def doneshoporder(DoneShopOrder_Form, searchShops, Shop_Form, Product_Form, sear
     # change order status
     delete_order = Order.query.filter_by(oid = order_id).first()
     if delete_order.status == "Cancelled":
-        flash("商品已被取消",category="done_failed")
-        return 
+        flash("失敗，訂單已被取消",category="shop_done_failed")
+        return render_template(
+                            "nav.html", 
+                            # old version is outerjoin in next line
+                            shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                            user = User.query.filter_by(id=current_user.get_id()).first(), 
+                            has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
+                            searchShops = searchShops, 
+                            shop_form = Shop_Form, 
+                            product_form = Product_Form, 
+                            searchMyOrders0 = searchMyOrder0, 
+                            searchMyOrders1 = searchMyOrder1, 
+                            searchMyOrders2 = searchMyOrder2, 
+                            searchMyOrders3 = searchMyOrder3, 
+                            searchShopOrders0 = searchShopOrder0, 
+                            searchShopOrders1 = searchShopOrder1, 
+                            searchShopOrders2 = searchShopOrder2, 
+                            searchShopOrders3 = searchShopOrder3, 
+                            searchTransactionRecords0 = searchTransactionRecord0, 
+                            searchTransactionRecords1 = searchTransactionRecord1, 
+                            searchTransactionRecords2 = searchTransactionRecord2, 
+                            searchTransactionRecords3 = searchTransactionRecord3, 
+                            location_form = Location_Form, 
+                            recharge_form = Recharge_Form 
+                        )
     if delete_order.status == "Finished":
-        flash("商品已完成",category="done_failed")
-        return 
+        flash("失敗，訂單已被完成",category="shop_done_failed")
+        return render_template(
+                            "nav.html", 
+                            # old version is outerjoin in next line
+                            shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                            user = User.query.filter_by(id=current_user.get_id()).first(), 
+                            has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
+                            searchShops = searchShops, 
+                            shop_form = Shop_Form, 
+                            product_form = Product_Form, 
+                            searchMyOrders0 = searchMyOrder0, 
+                            searchMyOrders1 = searchMyOrder1, 
+                            searchMyOrders2 = searchMyOrder2, 
+                            searchMyOrders3 = searchMyOrder3, 
+                            searchShopOrders0 = searchShopOrder0, 
+                            searchShopOrders1 = searchShopOrder1, 
+                            searchShopOrders2 = searchShopOrder2, 
+                            searchShopOrders3 = searchShopOrder3, 
+                            searchTransactionRecords0 = searchTransactionRecord0, 
+                            searchTransactionRecords1 = searchTransactionRecord1, 
+                            searchTransactionRecords2 = searchTransactionRecord2, 
+                            searchTransactionRecords3 = searchTransactionRecord3, 
+                            location_form = Location_Form, 
+                            recharge_form = Recharge_Form 
+                        )
     new_order = Order(delete_order.uid, order_sid, "Finished", delete_order.start, delete_order.shop_name, total_price, delete_order.oid, end_time)
     user_database.session.delete(delete_order)
     user_database.session.add(new_order)
@@ -328,7 +374,7 @@ def doneshoporder(DoneShopOrder_Form, searchShops, Shop_Form, Product_Form, sear
     searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3 = searchtransactionrecord()
 
     # TODO error message: can not be float
-    flash("加值成功",category="recharge success")
+    flash("訂單成功完成",category="shop_done_success")
     return render_template(
                             "nav.html", 
                             # old version is outerjoin in next line

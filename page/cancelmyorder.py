@@ -304,7 +304,7 @@ def cancelmyorder(CancelMyOrder_Form, searchShops, Shop_Form, Product_Form, sear
     # set status to cancelled, set end_time
     delete_order = Order.query.filter_by(oid = order_id).first()
     if delete_order.status == "Cancelled":
-        flash("訂單已被取消",category="cacnel_failed")
+        flash("失敗，訂單已被取消",category="my_cancel_failed")
         return render_template(
                                 "nav.html", 
                                 # old version is outerjoin in next line
@@ -329,6 +329,33 @@ def cancelmyorder(CancelMyOrder_Form, searchShops, Shop_Form, Product_Form, sear
                                 location_form = Location_Form, 
                                 recharge_form = Recharge_Form 
                             )
+    if delete_order.status == "Finished":
+        flash("失敗，訂單已被完成",category="my_cancel_failed")
+        return render_template(
+                            "nav.html", 
+                            # old version is outerjoin in next line
+                            shop_product = Shop.query.join(Product, Shop.sid == Product.sid and Shop.pid == current_user.get_id()).add_columns(Product.name, Product.pid, Product.price, Product.quantity, Product.picture),
+                            user = User.query.filter_by(id=current_user.get_id()).first(), 
+                            has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
+                            searchShops = searchShops, 
+                            shop_form = Shop_Form, 
+                            product_form = Product_Form, 
+                            searchMyOrders0 = searchMyOrder0, 
+                            searchMyOrders1 = searchMyOrder1, 
+                            searchMyOrders2 = searchMyOrder2, 
+                            searchMyOrders3 = searchMyOrder3, 
+                            searchShopOrders0 = searchShopOrder0, 
+                            searchShopOrders1 = searchShopOrder1, 
+                            searchShopOrders2 = searchShopOrder2, 
+                            searchShopOrders3 = searchShopOrder3, 
+                            searchTransactionRecords0 = searchTransactionRecord0, 
+                            searchTransactionRecords1 = searchTransactionRecord1, 
+                            searchTransactionRecords2 = searchTransactionRecord2, 
+                            searchTransactionRecords3 = searchTransactionRecord3, 
+                            location_form = Location_Form, 
+                            recharge_form = Recharge_Form 
+                        )
+    
     obj_uid = Shop.query.filter_by(sid = order_sid).first().uid
     new_order = Order(uid, order_sid, "Cancelled", delete_order.start, delete_order.shop_name, total_price, delete_order.oid, end_time)
     print("[35] delete_order:", delete_order)
@@ -360,7 +387,7 @@ def cancelmyorder(CancelMyOrder_Form, searchShops, Shop_Form, Product_Form, sear
     searchTransactionRecord0, searchTransactionRecord1, searchTransactionRecord2, searchTransactionRecord3 = searchtransactionrecord()
 
     # TODO error message: can not be float
-    flash("訂單取消成功",category="cancell_success")
+    flash("訂單取消成功",category="my_cancel_success")
     return render_template(
                             "nav.html",
                             # old version is outerjoin in next line

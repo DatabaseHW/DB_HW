@@ -712,6 +712,13 @@
       <div id="myorder" class="tab-pane fade">
         
         <h3>Search My order</h3>
+        {% with messages = get_flashed_messages(category_filter=["my_cancel_success", "my_cancel_failed"]) %}
+            {% if messages %}
+                {% for message in messages %}                  
+                    <div class="alert alert-warning" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         <label class="control-label col-sm-1" for="status">status</label>
         <form method = "post">
           <div class="col-sm-5">
@@ -1063,6 +1070,13 @@
 
         {% if has_shop is not none %}
           <h3>Search {{ has_shop.name }} order</h3>
+          {% with messages = get_flashed_messages(category_filter=["shop_cancel_success", "shop_cancel_failed", "shop_done_success", "shop_done_failed"]) %}
+              {% if messages %}
+                  {% for message in messages %}                  
+                      <div class="alert alert-warning" role="alert">{{ message }}</div>
+                  {% endfor %}
+              {% endif %}
+          {% endwith %}
           <!-- <input value="{{ has_shop.sid }}" name="shopid" hidden=True/> -->
           <label class="control-label col-sm-1" for="status">status</label>
           <form method = "post">

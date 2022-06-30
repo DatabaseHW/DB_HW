@@ -605,18 +605,19 @@ def homee(status=3):
     # print("[308] Recharge_Form.recharge_addvalue:", Recharge_Form.recharge_addvalue)
     # print("[309] Order_Form.productNum:", Order_Form.productNum)
     # print("[310] Recharge_Form.recharge_submit.data:", Recharge_Form.recharge_submit.data)
-    
-    user_sid = Shop.query.filter_by(uid = current_user.get_id()).first().sid
-    shop_product = Product.query.all()
-    i = 0
-    while i < len(shop_product):
-        if(shop_product[i].sid != user_sid):
-            shop_product.remove(shop_product[i])
-            continue
-        i += 1
-    for i in range(len(shop_product)):
-        shop_product[i].ID = i + 1
-        
+    shop_product = []
+    if Shop.query.filter_by(uid = current_user.get_id()).first() != None:
+        user_sid = Shop.query.filter_by(uid = current_user.get_id()).first().sid
+        shop_product = Product.query.all()
+        i = 0
+        while i < len(shop_product):
+            if(shop_product[i].sid != user_sid):
+                shop_product.remove(shop_product[i])
+                continue
+            i += 1
+        for i in range(len(shop_product)):
+            shop_product[i].ID = i + 1
+            
     print("shop_product:")
     for i in range(len(shop_product)):
         print("shop_product:", shop_product[i])
@@ -785,16 +786,18 @@ def myorder():
     Location_Form = LocationForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
     Recharge_Form = RechargeForm(request.form, meta={'csrf': False})  # may be attacked by csrf attack
 
-    user_sid = Shop.query.filter_by(uid = current_user.get_id()).first().sid
-    shop_product = Product.query.all()
-    i = 0
-    while i < len(shop_product):
-        if(shop_product[i].sid != user_sid):
-            shop_product.remove(shop_product[i])
-            continue
-        i += 1
-    for i in range(len(shop_product)):
-        shop_product[i].ID = i + 1
+    shop_product = []
+    if Shop.query.filter_by(uid = current_user.get_id()).first() != None:
+        user_sid = Shop.query.filter_by(uid = current_user.get_id()).first().sid
+        shop_product = Product.query.all()
+        i = 0
+        while i < len(shop_product):
+            if(shop_product[i].sid != user_sid):
+                shop_product.remove(shop_product[i])
+                continue
+            i += 1
+        for i in range(len(shop_product)):
+            shop_product[i].ID = i + 1
     
     searchShops = searchshop_()
     searchMyOrder0, searchMyOrder1, searchMyOrder2, searchMyOrder3 = searchmyorder()

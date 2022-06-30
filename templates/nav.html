@@ -404,7 +404,7 @@
                                 <div class="modal-footer">
                                   <table class="table" style=" margin-top: 15px;">
                                     <input value="-1" id="{{ searchShop.ID }}deliveryFee_subtotal" name="deliveryFee_subtotal" hidden = True>
-                                    <input value="Not triggered" id="pnum{{ searchShop.ID }}" name="pnum{{ searchShop.ID }}">
+                                    <input value="Not triggered" id="pnum{{ searchShop.ID }}" name="pnum{{ searchShop.ID }}" hidden = True>
                                     <tbody id="{{ searchShop.ID }}content">
                                       {% for _product in searchShop.products %}
                                         <input value="{{ _product.pid }}" hidden=True/>
@@ -742,6 +742,7 @@
             <table class="table" style=" margin-top: 15px;">
               <thead>
                 <tr>
+                  <!-- <th scope="col">check box</th> -->
                   <th scope="col">Order ID</th>
                   <th scope="col">status</th>
                   <th scope="col">Start</th>
@@ -755,6 +756,13 @@
               <tbody>
                 {% for searchMyOrder in searchMyOrders0 %}    
                   <tr id="smo0{{searchMyOrder.ID}}">
+                    <!-- <th> -->
+                      <!-- <input class="w2ui-grid-select-check" type="checkbox" tabindex="-1" onclick="var obj = w2ui['grid']; 
+                                                    if (!obj.multiSelect) { obj.selectNone(); }                
+                                                    if (this.checked) obj.select('1477610'); else obj.unselect('1477610'); 
+                                                    if (event.stopPropagation) event.stopPropagation(); 
+                                                    else event.cancelBubble = true;"> -->
+                    <!-- </th> -->
                     <th scope="row">{{ searchMyOrder.ID }}</th>
                     <td>{{ searchMyOrder.status }}</td>
                     <td>{{ searchMyOrder.start }}</td>
@@ -822,7 +830,9 @@
                     <td>
                       <form method="post">
                         <input value="{{ searchMyOrder.oid | safe}}" name = "searchMyOrder_oid" hidden = True>
-                        <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                        {% if searchMyOrder.status == "Not Finish"%} 
+                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                        {% endif %}
                       </form>
                     </td>
                   </tr>
@@ -899,7 +909,9 @@
                     <td>
                       <form method="post">
                         <input value="{{ searchMyOrder.oid | safe}}" name = "searchMyOrder_oid" hidden = True>
-                        <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                        {% if searchMyOrder.status == "Not Finish"%} 
+                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                        {% endif %}
                       </form>
                     </td>
                   </tr>
@@ -976,7 +988,9 @@
                     <td>
                       <form method="post">
                         <input value="{{ searchMyOrder.oid | safe}}" name = "searchMyOrder_oid" hidden = True>
-                        <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                        {% if searchMyOrder.status == "Not Finish"%} 
+                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                        {% endif %}
                       </form>
                     </td>
                   </tr>
@@ -1052,7 +1066,9 @@
                     <td>
                       <form method="post">
                         <input value="{{ searchMyOrder.oid | safe}}" name = "searchMyOrder_oid" hidden = True>
-                        <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                        {% if searchMyOrder.status == "Not Finish"%} 
+                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchMyOrder_Cancel_submit">
+                        {% endif %}
                       </form>
                     </td>
                   </tr>
@@ -1180,8 +1196,10 @@
                       <td>
                         <form method="post">
                           <input value="{{ searchShopOrder.oid | safe}}" name = "searchShopOrder_oid" hidden = True>
-                          <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
-                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                          {% if searchShopOrder.status == "Not Finish"%} 
+                            <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
+                            <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                          {% endif %}
                         </form>
                       </td>
                     </tr>
@@ -1255,8 +1273,10 @@
                       <td>
                         <form method="post">
                           <input value="{{ searchShopOrder.oid | safe}}" name = "searchShopOrder_oid" hidden = True>
-                          <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
-                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                          {% if searchShopOrder.status == "Not Finish"%} 
+                            <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
+                            <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                          {% endif %}                          
                         </form>
                       </td>
                     </tr>
@@ -1330,8 +1350,10 @@
                       <td>
                         <form method="post">
                           <input value="{{ searchShopOrder.oid | safe}}" name = "searchShopOrder_oid" hidden = True>
-                          <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
-                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                          {% if searchShopOrder.status == "Not Finish"%} 
+                            <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
+                            <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                          {% endif %}
                         </form>
                       </td>
                     </tr>
@@ -1405,8 +1427,10 @@
                       <td>
                         <form method="post">
                           <input value="{{ searchShopOrder.oid | safe}}" name = "searchShopOrder_oid" hidden = True>
-                          <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
-                          <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                          {% if searchShopOrder.status == "Not Finish"%} 
+                            <input type="submit" value="Done" class="btn btn-danger" name="searchShopOrder_Done_submit">
+                            <input type="submit" value="Cancel" class="btn btn-danger" name="searchShopOrder_Cancel_submit">
+                          {% endif %}
                         </form>
                       </td>
                     </tr>

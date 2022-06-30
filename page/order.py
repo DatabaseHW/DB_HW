@@ -110,12 +110,25 @@ def searchmyorder():
             continue
         i += 1
 
+    for _ in range(len(searchMyOrder0)):
+        searchMyOrder0[_].ID = _ + 1
+    for _ in range(len(searchMyOrder1)):
+        searchMyOrder1[_].ID = _ + 1
+    for _ in range(len(searchMyOrder2)):
+        searchMyOrder2[_].ID = _ + 1
+    for _ in range(len(searchMyOrder3)):
+        searchMyOrder3[_].ID = _ + 1
+
+    # print("searchMyOrder:")
     # for _ in range(len(searchMyOrder0)):
     #     print("[194]", searchMyOrder0[_].ID)
+    # print("-------------------")
     # for _ in range(len(searchMyOrder1)):
     #     print("[195]", searchMyOrder1[_].ID)
+    # print("-------------------")
     # for _ in range(len(searchMyOrder2)):
     #     print("[196]", searchMyOrder2[_].ID)
+    # print("-------------------")
     # for _ in range(len(searchMyOrder3)):
     #     print("[197]", searchMyOrder3[_].ID)
 
@@ -207,14 +220,27 @@ def searchshoporder():
             continue
         i += 1
     
+    for _ in range(len(searchShopOrder0)):
+        searchShopOrder0[_].ID = _ + 1
+    for _ in range(len(searchShopOrder1)):
+        searchShopOrder1[_].ID = _ + 1
+    for _ in range(len(searchShopOrder2)):
+        searchShopOrder2[_].ID = _ + 1
+    for _ in range(len(searchShopOrder3)):
+        searchShopOrder3[_].ID = _ + 1
+
+    # print("searchShopOrder:")
     # for _ in range(len(searchShopOrder0)):
-    #     print(searchShopOrder0[_].products)
+    #     print(searchShopOrder0[_].ID)
+    # print("-------------------")
     # for _ in range(len(searchShopOrder1)):
-    #     print(searchShopOrder1[_].products)
+    #     print(searchShopOrder1[_].ID)
+    # print("-------------------")
     # for _ in range(len(searchShopOrder2)):
-    #     print(searchShopOrder2[_].products)
+    #     print(searchShopOrder2[_].ID)
+    # print("-------------------")
     # for _ in range(len(searchShopOrder3)):
-    #     print(searchShopOrder3[_].products)
+    #     print(searchShopOrder3[_].ID)
 
     # print("[168]", len(searchShopOrder0), len(searchShopOrder1), len(searchShopOrder2), len(searchShopOrder3))
 

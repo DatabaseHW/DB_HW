@@ -353,66 +353,73 @@ def order(Order_Form, searchShops, shop_product, Shop_Form, Product_Form, search
     productNum = productNum[len(productNum)-cnt-1:len(productNum)-1]
     print("[40] productNum", productNum)
 
+    fg = 0
+    for x in productNum:
+        if x != '0':
+            fg = 1
+            break
+    if fg == 0:
+        flash("商品數量非正整數",category="order_product_not_pos_int")
+        return render_template(
+                                "nav.html", 
+                                # old version is outerjoin in next line
+                                shop_product = shop_product,
+                                user = User.query.filter_by(id=current_user.get_id()).first(), 
+                                has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
+                                searchShops = searchShops, 
+                                shop_form = Shop_Form, 
+                                product_form = Product_Form, 
+                                searchMyOrders0 = searchMyOrder0, 
+                                searchMyOrders1 = searchMyOrder1, 
+                                searchMyOrders2 = searchMyOrder2, 
+                                searchMyOrders3 = searchMyOrder3, 
+                                searchShopOrders0 = searchShopOrder0, 
+                                searchShopOrders1 = searchShopOrder1, 
+                                searchShopOrders2 = searchShopOrder2, 
+                                searchShopOrders3 = searchShopOrder3, 
+                                searchTransactionRecords0 = searchTransactionRecord0, 
+                                searchTransactionRecords1 = searchTransactionRecord1, 
+                                searchTransactionRecords2 = searchTransactionRecord2, 
+                                searchTransactionRecords3 = searchTransactionRecord3, 
+                                location_form = Location_Form, 
+                    recharge_form = Recharge_Form 
+                            )
+
+
     for x in all_product:
         if(x.sid == order_sid):
             # productNum = request.args.get('productNum' + x.pid) # cannot get number
             print("[342] productNum[0]", productNum[0])
             # 這邊還沒寫好哦我只是大致寫了一下
-            if int(productNum[0]) <= 0:
-                flash("商品數量非正整數",category="order_product_not_pos_int")
-                return render_template(
-                                        "nav.html", 
-                                        # old version is outerjoin in next line
-                                        shop_product = shop_product,
-                                        user = User.query.filter_by(id=current_user.get_id()).first(), 
-                                        has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
-                                        searchShops = searchShops, 
-                                        shop_form = Shop_Form, 
-                                        product_form = Product_Form, 
-                                        searchMyOrders0 = searchMyOrder0, 
-                                        searchMyOrders1 = searchMyOrder1, 
-                                        searchMyOrders2 = searchMyOrder2, 
-                                        searchMyOrders3 = searchMyOrder3, 
-                                        searchShopOrders0 = searchShopOrder0, 
-                                        searchShopOrders1 = searchShopOrder1, 
-                                        searchShopOrders2 = searchShopOrder2, 
-                                        searchShopOrders3 = searchShopOrder3, 
-                                        searchTransactionRecords0 = searchTransactionRecord0, 
-                                        searchTransactionRecords1 = searchTransactionRecord1, 
-                                        searchTransactionRecords2 = searchTransactionRecord2, 
-                                        searchTransactionRecords3 = searchTransactionRecord3, 
-                                        location_form = Location_Form, 
-                            recharge_form = Recharge_Form 
-                                    )
             
-            try:
-                val = int(productNum[0])
-            except:
-                flash("商品數量非正整數",category="order_product_not_pos_int")
-                return render_template(
-                                        "nav.html", 
-                                        # old version is outerjoin in next line
-                                        shop_product = shop_product,
-                                        user = User.query.filter_by(id=current_user.get_id()).first(), 
-                                        has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
-                                        searchShops = searchShops, 
-                                        shop_form = Shop_Form, 
-                                        product_form = Product_Form, 
-                                        searchMyOrders0 = searchMyOrder0, 
-                                        searchMyOrders1 = searchMyOrder1, 
-                                        searchMyOrders2 = searchMyOrder2, 
-                                        searchMyOrders3 = searchMyOrder3, 
-                                        searchShopOrders0 = searchShopOrder0, 
-                                        searchShopOrders1 = searchShopOrder1, 
-                                        searchShopOrders2 = searchShopOrder2, 
-                                        searchShopOrders3 = searchShopOrder3, 
-                                        searchTransactionRecords0 = searchTransactionRecord0, 
-                                        searchTransactionRecords1 = searchTransactionRecord1, 
-                                        searchTransactionRecords2 = searchTransactionRecord2, 
-                                        searchTransactionRecords3 = searchTransactionRecord3, 
-                                        location_form = Location_Form, 
-                            recharge_form = Recharge_Form 
-                                    )
+            # try:
+            #     val = int(productNum[0])
+            # except:
+            #     flash("商品數量非正整數",category="order_product_not_pos_int")
+            #     return render_template(
+            #                             "nav.html", 
+            #                             # old version is outerjoin in next line
+            #                             shop_product = shop_product,
+            #                             user = User.query.filter_by(id=current_user.get_id()).first(), 
+            #                             has_shop=Shop.query.filter_by(uid=current_user.get_id()).first(),
+            #                             searchShops = searchShops, 
+            #                             shop_form = Shop_Form, 
+            #                             product_form = Product_Form, 
+            #                             searchMyOrders0 = searchMyOrder0, 
+            #                             searchMyOrders1 = searchMyOrder1, 
+            #                             searchMyOrders2 = searchMyOrder2, 
+            #                             searchMyOrders3 = searchMyOrder3, 
+            #                             searchShopOrders0 = searchShopOrder0, 
+            #                             searchShopOrders1 = searchShopOrder1, 
+            #                             searchShopOrders2 = searchShopOrder2, 
+            #                             searchShopOrders3 = searchShopOrder3, 
+            #                             searchTransactionRecords0 = searchTransactionRecord0, 
+            #                             searchTransactionRecords1 = searchTransactionRecord1, 
+            #                             searchTransactionRecords2 = searchTransactionRecord2, 
+            #                             searchTransactionRecords3 = searchTransactionRecord3, 
+            #                             location_form = Location_Form, 
+            #                 recharge_form = Recharge_Form 
+            #                         )
             
             if int(Order_Form.calcPrice_total.data) > User.query.filter_by(id = current_user.get_id()).first().balance:
                 flash("訂購金額 > 餘額",category="order_product_not_enough_money")

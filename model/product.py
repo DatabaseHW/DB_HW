@@ -47,3 +47,6 @@ class Product(user_database.Model, UserMixin):
     
     def __str__(self):
         return f'<Product {self.name!r} PID {self.pid!r}>'
+
+    def get_id(self):
+        return self.pid

@@ -36,7 +36,7 @@ class Transaction(user_database.Model, UserMixin):
         self.uid = uid
         self.action = action
         self.trans_time = trans_time
-        self.trader_id = trader
+        self.trader = trader
         self.change = change
         if(tmp_id == None):
             self.tmp_id = bcrypt.generate_password_hash(uid + action + trans_time + trader + str(change) + str(date.today()) + ' ' + datetime.now().strftime("%H:%M:%S"))

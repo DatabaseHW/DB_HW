@@ -88,7 +88,14 @@
 
         <div class="row">
           <div class="col-xs-10">
-            Accouont: {{ user.account }}, <br/>
+            <p>Account: {{ user.account }}, </p>
+            {% if has_shop is none %}
+              <p> Identity: User, </p>
+            {% endif %} 
+            {% if has_shop is not none %}
+              <p> Identity: Shop Keeper, </p>
+            {% endif %}
+            <!-- <br/> -->
             PhoneNumber: {{ user.phonenumber }}, <br/>
             location: {{ user.latitude }}, {{ user.longitude }}
             <td><button type="button" class="btn btn-info" data-toggle="modal" data-target="#Modal-Location">Edit Location</button></td>
@@ -246,7 +253,7 @@
               </thead>
               <tbody>
                 {% for searchShop in searchShops %}    
-                  <input value="Not triggered" id="pnum{{ searchShop.ID }}" name="pnum{{ searchShop.ID }}">
+                  
                   <script>
                     var prodpid{{ searchShop.ID }}=[]
                     var prodpric{{ searchShop.ID }}=[]
@@ -397,7 +404,7 @@
                                 <div class="modal-footer">
                                   <table class="table" style=" margin-top: 15px;">
                                     <input value="-1" id="{{ searchShop.ID }}deliveryFee_subtotal" name="deliveryFee_subtotal" hidden = True>
-                                    
+                                    <input value="Not triggered" id="pnum{{ searchShop.ID }}" name="pnum{{ searchShop.ID }}">
                                     <tbody id="{{ searchShop.ID }}content">
                                       {% for _product in searchShop.products %}
                                         <input value="{{ _product.pid }}" hidden=True/>
@@ -470,7 +477,7 @@
                                           }
                                           function genProdNum{{ searchShop.ID }}(pnum){
                                             ret = document.getElementById("pnum{{ searchShop.ID }}")
-                                            document.getElementById("pnum{{ searchShop.ID }}").value = ' ';
+                                            document.getElementById("pnum{{ searchShop.ID }}").value = '{{ searchShop.sid }} ';
                                             for(let i=0;i<pnum.length;i++){
                                               ret.value = ret.value + pnum[i] + ' '
                                             }

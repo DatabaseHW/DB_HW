@@ -312,6 +312,7 @@ def order(Order_Form, searchShops, Shop_Form, Product_Form, searchMyOrder0, sear
             break
         i += 1
     
+    # productNum = "3 "
     print("[339] productNum:", productNum)
     # productNum = productNum.split(' ')
 
